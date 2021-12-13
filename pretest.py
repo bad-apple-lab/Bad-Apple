@@ -21,7 +21,7 @@ def g(c):
                 s1+=i[0]
             else:
                 s2+=i[0]
-        print(c,j,s2,s1)
+        print(c,j,s1,s2)
 
 for i in '~@':
     g(i)

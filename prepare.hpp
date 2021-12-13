@@ -165,23 +165,24 @@ inline void data2map(std::string pth,B white=0xff,B black=0x00,std::string pth_i
 inline void map2show(std::string pth,std::string pth_in=""){
     if(pth_in.size()){
         FILE*f=fopen(pth_in.c_str(),"r");
-        fscanf(f,"%d%d%d%d",&offsets,&offsetA,&ssr,&half,&WHITE,&BLACK);
+        fscanf(f,"%d%d%d%d%d",&offsets,&offsetA,&ssr,&WHITE,&BLACK);
         LC=WHITE-BLACK;
         for(auto j=0;j<ssr;j++){
             fscanf(f,"%d",&ss[j]);
         }
         for(auto i=0;i<offsets;i++){
             for(auto c=0;c<=LC;c++){
-                fscanf(f,"%d",ans_full[i][c+WHITE]);
+                fscanf(f,"%d",&ans_full[i][c+WHITE]);
             }
             for(auto c=0;c<=LC;c++){
                 for(auto c2=0;c2<=LC;c2++){
-                    fscanf(f,"%d",ans_split[i][c+WHITE][c2+WHITE]);
+                    fscanf(f,"%d",&ans_split[i][c+WHITE][c2+WHITE]);
                 }
             }
         }
         fclose(f);
     }
+    printf("QwQ");
     FILE*f=fopen(pth.c_str(),"w");
     for(auto i=0;i<offsets;i++){
         for(auto c=0;c<=LC;c++){
@@ -196,6 +197,7 @@ inline void map2show(std::string pth,std::string pth_in=""){
     for(auto i=0;i<offsets;i++){
         for(auto c=0;c<=LC;c++){
             for(auto c2=0;c2<=LC;c2++){
+                fprintf(f,"%c",ans_split[i][c+WHITE][c2+WHITE]);
                 fprintf(f,"%c",ans_split[i][c+WHITE][c2+WHITE]);
             }
             fprintf(f,"\n");
