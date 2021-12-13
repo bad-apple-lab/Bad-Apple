@@ -9,6 +9,8 @@
 #define register
 // #define inline
 
+#define fu(x) (~(x)+1)
+
 #define WARN_EXTRA_DATA 1
 #define ERR_NOT_BMP_1 (-1)
 #define ERR_NOT_BMP_2 (-2)
@@ -95,10 +97,10 @@ public:
     int*tag;
     int lastag=0;
     B head[size_head]={
-        0x42,0x4d,0xff,0xff,	0xff,0xff,0x00,0x00,	0x00,0x00,0x36,0x00,	0x00,0x00,0x28,0x00,
-        0x00,0x00,0xff,0xff,	0xff,0xff,0xff,0xff,	0xff,0xff,0x01,0x00,	0x18,0x00,0x00,0x00,
-        0x00,0x00,0xff,0xff,	0xff,0xff,0x00,0x00,	0x00,0x00,0x00,0x00,	0x00,0x00,0x00,0x00,
-        0x00,0x00,0x00,0x00,	0x00,0x00
+        0x42,0x4d,0xff,0xff,    0xff,0xff,0x00,0x00,    0x00,0x00,0x36,0x00,    0x00,0x00,0x28,0x00,
+        0x00,0x00,0xff,0xff,    0xff,0xff,0xff,0xff,    0xff,0xff,0x01,0x00,    0x18,0x00,0x00,0x00,
+        0x00,0x00,0xff,0xff,    0xff,0xff,0x00,0x00,    0x00,0x00,0x00,0x00,    0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,    0x00,0x00
     };
 
     BMP24bits(LL x,LL y){
@@ -121,7 +123,7 @@ public:
     }
 
     BMP24bits(std::string p){
-        FILE*f=fopen(p.c_str(),"rb");
+        FILE*f=fopen(bmp(p).c_str(),"rb");
         code=read(f);
         fclose(f);
         if(code)printf("ERROR %d \"%s\"\n",code,p.c_str());
@@ -223,6 +225,22 @@ public:
         return tag[x];
     }
 
+    inline B getb(int x,int y=DEFAULT_Y){
+        if((x=_getxy(x,y))<0)
+            return x;
+        return o[x+(x<<1)];
+    }
+    inline B getg(int x,int y=DEFAULT_Y){
+        if((x=_getxy(x,y))<0)
+            return x;
+        return o[x+(x<<1)+1];
+    }
+    inline B getr(int x,int y=DEFAULT_Y){
+        if((x=_getxy(x,y))<0)
+            return x;
+        return o[x+((x+1)<<1)];
+    }
+
     inline int getpixel(int x,int y=DEFAULT_Y){
         if((x=_getxy(x,y))<0)
             return x;
@@ -296,6 +314,156 @@ public:
             return bgray(r,g,b);
         else
             return wgray(r,g,b);
+    }
+
+    inline BMP24bits*resize(LL x,LL y,int f=0){
+        if(f==0){
+            return resize_avg(x,y);
+        }
+    }
+
+    inline BMP24bits*resize_avg(LL x,LL y){
+        BMP24bits*p=new BMP24bits(x,y);
+        for(int i=0;i<x;i++)for(int j=0;j<y;j++){
+            LL r=0,g=0,b=0,check=0,check2=0;
+
+            const int il=i*width;
+            const int ir=il+width-1;
+            const int jl=j*height;
+            const int jr=jl+height-1;
+
+            const int xl=il/x;
+            const int xr=ir/x;
+            const int yl=jl/y;
+            const int yr=jr/y;
+
+            const int dxl=il-xl*x;
+            const int dxr=(xr+1)*x-1-ir;
+            const int dyl=jl-yl*y;
+            const int dyr=(yr+1)*y-1-jr;
+
+            LL r2,g2,b2,v,v2;
+
+            // all
+            v2=b2=g2=r2=0;
+            for(int xi=xl;xi<=xr;xi++){
+                for(int yj=yl;yj<=yr;yj++){
+                    v2++;
+                    b2+=getb(xi,yj);
+                    g2+=getg(xi,yj);
+                    r2+=getr(xi,yj);
+                }
+            }
+            v=x*y;
+            check+=v2*v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            // left
+            v2=b2=g2=r2=0;
+            for(int yj=yl;yj<=yr;yj++){
+                v2++;
+                b2+=getb(xl,yj);
+                g2+=getg(xl,yj);
+                r2+=getr(xl,yj);
+            }
+            v=fu(dxl*y);
+            check+=v2*v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            // right
+            v2=b2=g2=r2=0;
+            for(int yj=yl;yj<=yr;yj++){
+                v2++;
+                b2+=getb(xr,yj);
+                g2+=getg(xr,yj);
+                r2+=getr(xr,yj);
+            }
+            v=fu(dxr*y);
+            check+=v2*v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            // up
+            v2=b2=g2=r2=0;
+            for(int xi=xl;xi<=xr;xi++){
+                v2++;
+                b2+=getb(xi,yl);
+                g2+=getg(xi,yl);
+                r2+=getr(xi,yl);
+            }
+            v=fu(x*dyl);
+            check+=v2*v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            // down
+            v2=b2=g2=r2=0;
+            for(int xi=xl;xi<=xr;xi++){
+                v2++;
+                b2+=getb(xi,yr);
+                g2+=getg(xi,yr);
+                r2+=getr(xi,yr);
+            }
+            v=fu(x*dyr);
+            check+=v2*v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            // left up
+            b2=getb(xl,yl);
+            g2=getg(xl,yl);
+            r2=getr(xl,yl);
+            v=dxl*dyl;
+            check+=v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            // right up
+            b2=getb(xr,yl);
+            g2=getg(xr,yl);
+            r2=getr(xr,yl);
+            v=dxr*dyl;
+            check+=v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            // left down
+            b2=getb(xl,yr);
+            g2=getg(xl,yr);
+            r2=getr(xl,yr);
+            v=dxl*dyr;
+            check+=v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            // right down
+            b2=getb(xr,yr);
+            g2=getg(xr,yr);
+            r2=getr(xr,yr);
+            v=dxr*dyr;
+            check+=v;
+            b+=b2*v;
+            g+=g2*v;
+            r+=r2*v;
+
+            if(check^size){
+                printf("ERROR %d %d\n",check,size);
+                exit(0);
+            }
+
+            p->setpixel(i,j,(r+(size>>1))/size,(g+(size>>1))/size,(b+(size>>1))/size);
+        }
+        return p;
     }
 };
 
