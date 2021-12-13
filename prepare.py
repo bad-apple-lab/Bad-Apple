@@ -21,4 +21,4 @@ def g(c):
 
 
 for i in sorted(string.printable[:-5]):
-    j=g(i)
+    g(i)

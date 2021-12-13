@@ -10,6 +10,10 @@
 // #define inline
 
 #define fu(x) (~(x)+1)
+#define mn(a,b) (a<b?a:b)
+#define mx(a,b) (a>b?a:b)
+#define ab(a) (a>=0?a:fu(a))
+#define lowbit(a) (a&fu(a))
 
 #define WARN_EXTRA_DATA 1
 #define ERR_NOT_BMP_1 (-1)
@@ -320,12 +324,13 @@ public:
         if(f==0){
             return resize_avg(x,y);
         }
+        return this;
     }
 
     inline BMP24bits*resize_avg(LL x,LL y){
         BMP24bits*p=new BMP24bits(x,y);
         for(int i=0;i<x;i++)for(int j=0;j<y;j++){
-            LL r=0,g=0,b=0,check=0,check2=0;
+            LL r=0,g=0,b=0,check=0;
 
             const int il=i*width;
             const int ir=il+width-1;
