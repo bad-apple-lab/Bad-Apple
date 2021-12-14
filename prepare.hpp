@@ -14,8 +14,9 @@ LL m[MAXO][MAXCHAR][2],max_split[MAXO],min_split[MAXO],max_full,min_full;
 inline void bmp2data(std::string pth,int offseta=2,int offsetb=7){
     offsetA=offseta;
     offsets=offsetb-offseta+1;
-    for(auto j=L;j<=R;j++)
+    for(auto j=L;j<=R;j++){
         ss[ssr++]=j;
+    }
 
     FILE*f=fopen(pth.c_str(),"w");
     BMP24bits*p;
@@ -32,16 +33,19 @@ inline void bmp2data(std::string pth,int offseta=2,int offsetb=7){
             if(!half){
                 half=p->size>>1;
                 fprintf(f,"%d %d %d %d\n",offsets,offseta,ssr,half);
-                for(auto k=0;k<ssr;k++)
+                for(auto k=0;k<ssr;k++){
                     fprintf(f,"%d ",ss[k]);
+                }
                 flush10(f);
             }
 
             LL s1=0,s0=0;
-            for(auto x=0;x<half;x++)
+            for(auto x=0;x<half;x++){
                 s1+=p->getb(x);
-            for(auto x=half;x<half<<1;x++)
+            }
+            for(auto x=half;x<half<<1;x++){
                 s0+=p->getb(x);
+            }
             delete p;
 
             m[i][j][0]=s0;
@@ -74,8 +78,7 @@ inline void bmp2data(std::string pth,int offseta=2,int offsetb=7){
         &=V-{\rm ext},\\
     d'&=dL_c\\
         &=|v'-v|L_c\\
-        &=|V-{\rm ext}|\\
-        &=V<{\rm ext}?{\rm ext}-V:V-{\rm ext}.\\
+        &=|V-{\rm ext}|.\\
 \end{aligned}
 */
 
@@ -86,9 +89,10 @@ inline void data2map(std::string pth,B white=0xff,B black=0x00,std::string pth_i
     if(pth_in.size()){
         FILE*f=fopen(pth_in.c_str(),"r");
         fscanf(f,"%d%d%d%d",&offsets,&offsetA,&ssr,&half);
-        for(auto j=0;j<ssr;j++)
+        for(auto j=0;j<ssr;j++){
             fscanf(f,"%d",&ss[j]);
-        for(auto i=0;i<offsets;i++)
+        }
+        for(auto i=0;i<offsets;i++){
             for(auto j=0;j<ssr;j++){
                 int _i,_j;
                 LL s0,s1;
@@ -106,13 +110,15 @@ inline void data2map(std::string pth,B white=0xff,B black=0x00,std::string pth_i
                     min_full=mn(min_full,s2);
                 }
             }
+        }
         fclose(f);
     }
 
     FILE*f=fopen(pth.c_str(),"w");
     fprintf(f,"%d %d %d %d %d\n",offsets,offsetA,ssr,WHITE,BLACK);
-    for(auto k=0;k<ssr;k++)
+    for(auto k=0;k<ssr;k++){
         fprintf(f,"%d ",ss[k]);
+    }
     flush10(f);
 
     // full
@@ -123,12 +129,15 @@ inline void data2map(std::string pth,B white=0xff,B black=0x00,std::string pth_i
         const LL ext=min_full*LC+lv*c;
         for(auto j=0;j<ssr;j++){
             LL v=(m[0][j][0]+m[0][j][1])*LC;
-            v=v<ext?ext-v:v-ext;
-            if(v<mnl)mnl=v,mnc=ss[j];
+            v=absub(v,ext);
+            if(v<mnl){
+                mnl=v,mnc=ss[j];
+            }
         }
         ans_full[c+WHITE]=mnc;
         fprintf(f,"%d ",mnc);
-    }flush10(f);
+    }
+    flush10(f);
 
     // split
     for(auto i=0;i<offsets;i++){
@@ -144,11 +153,14 @@ inline void data2map(std::string pth,B white=0xff,B black=0x00,std::string pth_i
                     v=absub(v,ext);
                     LL v2=m[i][j][1]*LC;
                     v+=absub(v2,ext2);
-                    if(v<mnl)mnl=v,mnc=ss[j];
+                    if(v<mnl){
+                        mnl=v,mnc=ss[j];
+                    }
                 }
                 ans_split[i][c+WHITE][c2+WHITE]=mnc;
                 fprintf(f,"%d ",mnc);
-            }flush10(f);
+            }
+            flush10(f);
         }
     }
 }
@@ -158,27 +170,39 @@ inline void map2show(std::string pth,std::string pth_in=""){
         FILE*f=fopen(pth_in.c_str(),"r");
         fscanf(f,"%d%d%d%d%d",&offsets,&offsetA,&ssr,&WHITE,&BLACK);
         LC=WHITE-BLACK;
-        for(auto j=0;j<ssr;j++)fscanf(f,"%d",&ss[j]);
-        for(auto c=0;c<=LC;c++)fscanf(f,"%d",&ans_full[c+WHITE]);
-        for(auto i=0;i<offsets;i++)
-            for(auto c=0;c<=LC;c++)for(auto c2=0;c2<=LC;c2++)
-                fscanf(f,"%d",&ans_split[i][c+WHITE][c2+WHITE]);
+        for(auto j=0;j<ssr;j++){
+            fscanf(f,"%d",&ss[j]);
+        }
+        for(auto c=0;c<=LC;c++){
+            fscanf(f,"%d",&ans_full[c+WHITE]);
+        }
+        for(auto i=0;i<offsets;i++){
+            for(auto c=0;c<=LC;c++){
+                for(auto c2=0;c2<=LC;c2++){
+                    fscanf(f,"%d",&ans_split[i][c+WHITE][c2+WHITE]);
+                }
+            }
+        }
         fclose(f);
     }
 
     FILE*f=fopen(pth.c_str(),"w");
-    for(auto c=0;c<=LC>>1;c++){
-        for(auto c2=0;c2<=LC;c2++)
+    for(auto c=0;c<=(LC*15)>>5;c++){
+        for(auto c2=0;c2<=LC;c2++){
             fprintf(f,"%c",ans_full[c2+WHITE]);
+        }
         flush10(f);
-    }flush10(f);
+    }
+    flush10(f);
 
     for(auto i=0;i<offsets;i++){
         for(auto c=0;c<=LC;c++){
-            for(auto c2=0;c2<=LC;c2++)
+            for(auto c2=0;c2<=LC;c2++){
                 fprintf(f,"%c%c",ans_split[i][c+WHITE][c2+WHITE],ans_split[i][c+WHITE][c2+WHITE]);
+            }
             flush10(f);
-        }flush10(f);
+        }
+        flush10(f);
     }
 
 }

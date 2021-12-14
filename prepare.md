@@ -10,7 +10,6 @@ $$
         &=V-{\rm ext},\\
     d'&=dL_c\\
         &=|v'-v|L_c\\
-        &=|V-{\rm ext}|\\
-        &=V<{\rm ext}?{\rm ext}-V:V-{\rm ext}.\\
+        &=|V-{\rm ext}|.
 \end{aligned}
 $$
