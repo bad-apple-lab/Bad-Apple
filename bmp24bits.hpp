@@ -13,6 +13,7 @@
 #define mn(a,b) (a<b?a:b)
 #define mx(a,b) (a>b?a:b)
 #define ab(a) (a>=0?a:fu(a))
+#define absub(a,b) ((a<b)?(b-a):(a-b))
 #define lowbit(a) (a&fu(a))
 
 #define WARN_EXTRA_DATA 1
