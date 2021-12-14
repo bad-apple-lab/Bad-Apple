@@ -18,7 +18,7 @@ def ffprobe(pth)->float:
     open(file_conf,'wb').write(('%s %s\n'%(j['streams'][0]['nb_frames'],j['streams'][0]['duration'])).encode('utf8'))
     return j['streams'][0]['width'],j['streams'][0]['height'],eval(j['streams'][0]['r_frame_rate'])
 
-def frame_full(pth,fps=None):
+def frame(pth,fps=None):
     order='ffmpeg -i "%s" '%pth
     if fps:
         order+='-vf fps=%d '%fps
@@ -28,4 +28,4 @@ def frame_full(pth,fps=None):
 
 vpth=os.path.join(PTH,'Video',"1080p.mp4")
 print(ffprobe(vpth))
-print(frame_full(vpth))
+print(frame(vpth))

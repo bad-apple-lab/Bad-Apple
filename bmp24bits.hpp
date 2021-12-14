@@ -15,6 +15,7 @@
 #define ab(a) (a>=0?a:fu(a))
 #define absub(a,b) ((a<b)?(b-a):(a-b))
 #define lowbit(a) (a&fu(a))
+#define flush10(f) {putc(10,f);fflush(f);}
 
 #define WARN_EXTRA_DATA 1
 #define ERR_NOT_BMP_1 (-1)
@@ -128,7 +129,7 @@ public:
     }
 
     BMP24bits(std::string p){
-        FILE*f=fopen(bmp(p).c_str(),"rb");
+        FILE*f=fopen(p.c_str(),"rb");
         code=read(f);
         fclose(f);
         if(code)printf("ERROR %d \"%s\"\n",code,p.c_str());
