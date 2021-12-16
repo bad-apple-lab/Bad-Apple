@@ -53,7 +53,7 @@ inline void split(std::string f_v,std::string f_bmp,std::string f_conf){
     system(order.c_str());
 }
 
-inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,int y,double fps){
+inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,int y,double fps,int save_gray=0){
     printf("enocde\n");
     double duration;
     int nb_frames;
@@ -96,18 +96,16 @@ inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,
         for(int j=0;j<y;j++){
             const int delta=(y2-1-j)*x2;
             for(int i=0;i<x;i++){
-                auto c=p2->getb(i,j);
-                if(c>max){
-                    max=c;
-                }
-                if(c<min){
-                    min=c;
-                }
+                B c=p2->getb(i,j);
+                max=c>max?c:max;
+                min=c<min?c:min;
                 map[delta+i]=c;
             }
         }
-        // pth=fs_bmp+std::to_string(i)+"g.png";
-        // p2->save(pth);
+        if(save_gray){
+            pth=fs_bmp+"g"+std::to_string(i)+".png";
+            p2->save(pth);
+        }
         delete p2;
 
         fwrite(map,1,xy2,fp);

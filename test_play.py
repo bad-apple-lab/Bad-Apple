@@ -30,7 +30,7 @@ clk=int(clk)
 consloe_size(width,height)
 clear()
 print('BEGIN...')
-time.sleep(5)
+time.sleep(3)
 
 for i in s[1:]:
     rewind()

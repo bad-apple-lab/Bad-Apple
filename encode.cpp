@@ -26,7 +26,7 @@ std::string name="19260817.mp4";
     // std::string dir="~/test/BadApple/";
 #endif
 int width=96,height=72;
-int fps=99;
+double fps=12.5;
 // */
 
 
@@ -47,7 +47,7 @@ int main(){
     system((mkdir_p+"\""+fs_bmp+"\" >"+nul+" 2>&1").c_str());
     std::string f_bmp=fs_bmp+"%"+"d.bmp";
     std::string f_conf=fs_temp+named+".conf";
-    std::string f_data=fs_temp+named+"_"+std::to_string(width)+"x"+std::to_string(height)+"_"+std::to_string(fps)+".data";
+    std::string f_data=fs_temp+named+"_"+std::to_string(width)+"x"+std::to_string(height)+"_"+std::to_string((int)fps)+".data";
     std::string f_data2=dir+named+".badapple";
 
     // split(f_v,f_bmp,f_conf);
