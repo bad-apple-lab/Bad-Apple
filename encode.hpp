@@ -44,7 +44,6 @@ inline void uout(int x){
 }
 
 
-
 inline void split(std::string f_v,std::string f_bmp,std::string f_conf){
     std::string order=(std::string)"ffprobe -v quiet -show_streams -select_streams v \""+f_v+"\" | grep -E \"duration=|nb_frames=\" | awk -F= "+awk_qm+"{print $2}"+awk_qm+" > \""+f_conf+"\"";
     printf("%s\n",order.c_str());
@@ -87,7 +86,6 @@ inline void encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x
     B*map=(B*)malloc(xy2);
     for(auto i=1;i<=nb_frames;i+=mo){
         std::string pth=fs_bmp+std::to_string(i)+".bmp";
-        // printf("%s\n",pth.c_str());
         p=new BMP24bits(pth);
         p2=p->resize(x,y);
         delete p;
@@ -105,7 +103,6 @@ inline void encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x
         fwrite(map,1,xy2,fp);
         fflush(fp);
 
-        // printf("%s\n",pth.c_str());
         if(!((i/mo)&127)){
             printf("%d ",i/mo);
             fflush(stdout);
@@ -129,7 +126,7 @@ inline void encode2(std::string f_out,std::string f_in,std::string f_map){
     }
     fclose(f);
 
-    for(auto i=0;i<=MAXCOL;i++){
+    for(auto i=0;i<MAXCOL;i++){
         pt(map[i][i]);
     }
     pt(10);
@@ -144,7 +141,6 @@ inline void encode2(std::string f_out,std::string f_in,std::string f_map){
 
     fp=fopen(f_out.c_str(),"wb");
 
-    // fprintf(fp,"%d %d %d %d \n\n",x,y,n,clk);
     uout(x);
     ptc(32);
     uout(y);
@@ -155,7 +151,6 @@ inline void encode2(std::string f_out,std::string f_in,std::string f_map){
     ptc(32);
     ptc(10);
     ptc(10);
-
     fflush(fp);
 
     int l[x];

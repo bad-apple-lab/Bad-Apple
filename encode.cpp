@@ -33,7 +33,7 @@ int main(){
     std::string f_data=fs_temp+named+"_"+std::to_string(width)+"x"+std::to_string(height)+"_"+std::to_string(fps)+".data";
     std::string f_data2=dir+named+".badapple";
 
-    // split(f_v,f_bmp,f_conf);
-    // encode(f_data,fs_bmp,f_conf,width,height,fps);
+    split(f_v,f_bmp,f_conf);
+    encode(f_data,fs_bmp,f_conf,width,height,fps);
     encode2(f_data2,f_data,f_map);
 }
