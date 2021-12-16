@@ -1,14 +1,39 @@
 // code by userElaina
 #include "encode.hpp"
 
-// encode(std::string pth,std::string dir,int x,int y,double fps,int n,double time);
-// encode_ascii(std::string pth,std::string data,std::string font,int offset=5);
+// config
+std::string name="1080p.mp4";
+#if defined(__WINDOWS_) || defined(_WIN32)
+    std::string f_map="C:\\test\\BadApple\\1\\consola_0_0ff.data";
+    std::string dir="C:\\test\\BadApple\\1\\";
+#else
+    std::string f_map="~/test/BadApple/1/consola_0_0ff.data";
+    std::string dir="~/test/BadApple/";
+#endif
+int width=76,height=54;
+int fps=15;
 
 int main(){
-    std::string file_font="./consola_ascii_00ff.data";
-    std::string file_data="./v54_15.data";
-    std::string file_ba="./v54_15.badapple";
+    // preprocess
+    std::string f_v=dir+name;
+    std::string named;
+    for(int i=0;i<name.size();i++){
+        if(name[i]==' '){
+            name[i]='_';
+        }else if(name[i]=='.'){
+            named=name.substr(0,i);
+            break;
+        }
+    }
+    std::string fs_temp=dir+"temp"+split_path;
+    std::string fs_bmp=fs_temp+named+split_path;
+    system((mkdir_p+"\""+fs_bmp+"\" >"+nul+" 2>&1").c_str());
+    std::string f_bmp=fs_bmp+"%"+"d.bmp";
+    std::string f_conf=fs_temp+named+".conf";
+    std::string f_data=fs_temp+named+"_"+std::to_string(width)+"x"+std::to_string(height)+"_"+std::to_string(fps)+".data";
+    std::string f_data2=dir+named+".badapple";
 
-    encode(file_data,"./Frame/",76,54,15,6955,232.065167);
-    encode_ascii(file_ba,file_data,file_font);
+    // split(f_v,f_bmp,f_conf);
+    // encode(f_data,fs_bmp,f_conf,width,height,fps);
+    encode2(f_data2,f_data,f_map);
 }

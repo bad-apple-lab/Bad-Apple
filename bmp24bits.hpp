@@ -15,7 +15,6 @@
 #define ab(a) (a>=0?a:fu(a))
 #define absub(a,b) ((a<b)?(b-a):(a-b))
 #define lowbit(a) (a&fu(a))
-#define flush10(f) {putc(10,f);fflush(f);}
 
 #define WARN_EXTRA_DATA 1
 #define ERR_NOT_BMP_1 (-1)
@@ -36,6 +35,19 @@
 #define DEFAULT_Z -2147483646
 #define DEFAULT_G -2147483643
 #define DEFAULT_B -2147483642
+
+
+#if defined(__WINDOWS_) || defined(_WIN32)
+    std::string nul="nul";
+    std::string split_path="\\";
+    std::string awk_qm="\"";
+    std::string mkdir_p="mkdir ";
+#else
+    std::string nul="/dev/null";
+    std::string split_path="/";
+    std::string awk_qm="'";
+    std::string mkdir_p="mkdir -p ";
+#endif
 
 inline int argb(int r,int g=DEFAULT_G,int b=DEFAULT_B,int a=0){
     if(a<0||a>0xff)

@@ -1,13 +1,14 @@
 // code by userElaina
 #include "bmp24bits.hpp"
 
+const int MAXCOL=0x100;
+
 FILE*f;
 FILE*fp;
 
 inline int gtc(){
     return getc(f);
 }
-
 inline int g13(){
     int c=gtc();
     while(c==13){
@@ -18,9 +19,6 @@ inline int g13(){
 
 inline void ptc(int c){
     putc(c,fp);
-}
-inline void p32(){
-    ptc(' ');
 }
 
 inline int uin(){
@@ -36,7 +34,6 @@ inline int uin(){
     return ans;
 }
 
-
 inline void uout(int x){
     if(x<10){
         ptc('0'+x);
@@ -46,34 +43,52 @@ inline void uout(int x){
     }
 }
 
-inline void encode(std::string pth,std::string dir,int x,int y,double fps,int n,double time){
-    int mo=0.5+((double)n)/time/fps;
+
+
+inline void split(std::string f_v,std::string f_bmp,std::string f_conf){
+    std::string order=(std::string)"ffprobe -v quiet -show_streams -select_streams v \""+f_v+"\" | grep -E \"duration=|nb_frames=\" | awk -F= "+awk_qm+"{print $2}"+awk_qm+" > \""+f_conf+"\"";
+    printf("%s\n",order.c_str());
+    system(order.c_str());
+    order="ffmpeg -v quiet -i \""+f_v+"\" \""+f_bmp+"\"";
+    printf("%s\n",order.c_str());
+    system(order.c_str());
+}
+
+inline void encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,int y,double fps){
+    printf("enocde\n");
+    double duration;
+    int nb_frames;
+    f=fopen(f_conf.c_str(),"r");
+    fscanf(f,"%lf%d",&duration,&nb_frames);
+    fclose(f);
+    printf("%.2lf %d\n",duration,nb_frames);
+
+    int mo=0.5+((double)nb_frames)/duration/fps;
     if(!mo){
         mo=1;
     }
-    const int n2=(n-1)/mo+1;
-    const int clk=0.5+time*1000.0*(double)mo/(double)n;
+    const int n2=(nb_frames-1)/mo+1;
+    const int clk=0.5+duration*1000.0*(double)mo/(double)nb_frames;
     const int x2=x+(x&1),y2=y+(y&1);
     const int xy2=x2*y2;
 
-    fp=fopen(pth.c_str(),"wb");
+    printf("%d %d %d %d\n",x2,y2,n2,clk);
 
-    // fprintf(fp,"%d %d %d %d ",x2,y2,n2,clk);
-    uout(x2);
-    p32();
-    uout(y2);
-    p32();
-    uout(n2);
-    p32();
-    uout(clk);
-    p32();
+    fp=fopen(f_out.c_str(),"wb");
+
+    fwrite((B*)&x2,1,4,fp);
+    fwrite((B*)&y2,1,4,fp);
+    fwrite((B*)&n2,1,4,fp);
+    fwrite((B*)&clk,1,4,fp);
     fflush(fp);
 
     BMP24bits*p;
     BMP24bits*p2;
     B*map=(B*)malloc(xy2);
-    for(auto frame=1;frame<=n;frame+=mo){
-        p=new BMP24bits(dir+std::to_string(frame)+".bmp");
+    for(auto i=1;i<=nb_frames;i+=mo){
+        std::string pth=fs_bmp+std::to_string(i)+".bmp";
+        // printf("%s\n",pth.c_str());
+        p=new BMP24bits(pth);
         p2=p->resize(x,y);
         delete p;
         p2->gray();
@@ -90,36 +105,23 @@ inline void encode(std::string pth,std::string dir,int x,int y,double fps,int n,
         fwrite(map,1,xy2,fp);
         fflush(fp);
 
-        if(frame%(mo<<4)==1){
-            printf("%d\n",frame);
+        // printf("%s\n",pth.c_str());
+        if(!((i/mo)&127)){
+            printf("%d ",i/mo);
+            fflush(stdout);
         }
     }
     fclose(fp);
 }
 
-inline void encode_ascii(std::string pth,std::string data,std::string font,int offset=5){
-    f=fopen(font.c_str(),"rb");
-    uin();
-    int offseta=uin();
-    int c=g13();
-    while(offseta<offset){
-        for(auto i=0x00;i<=0xff;i++){
-            for(auto j=0x00;j<=0xff;j++){
-                // g13(),g13();
-                int c1;
-                if((c=g13())^(c1=g13()))printf("%d %d %d %d\n",i,j,c,c1),exit(0);
-                
-            }
-            // g13();
-            if((c=g13())^10)printf("%d %c\n",c,c),exit(0);
-        }
-        g13();
-        offseta++;
-    }
+inline void encode2(std::string f_out,std::string f_in,std::string f_map){
+    printf("enocde2\n");
 
-    int map[0x100][0x100];
-    for(auto i=0x00;i<=0xff;i++){
-        for(auto j=0x00;j<=0xff;j++){
+    f=fopen(f_map.c_str(),"rb");
+
+    int map[MAXCOL][MAXCOL];
+    for(auto i=0;i<MAXCOL;i++){
+        for(auto j=0;j<MAXCOL;j++){
             g13();
             map[i][j]=g13();
         }
@@ -127,30 +129,34 @@ inline void encode_ascii(std::string pth,std::string data,std::string font,int o
     }
     fclose(f);
 
-    for(auto i=0x00;i<=0xff;i++){
+    for(auto i=0;i<=MAXCOL;i++){
         pt(map[i][i]);
     }
     pt(10);
 
-    f=fopen(data.c_str(),"rb");
-    int x=uin();
-    int y=uin()>>1;
-    int n=uin();
-    int clk=uin();
+    f=fopen(f_in.c_str(),"rb");
+    int x,y,n,clk;
+    fread((B*)&x,1,4,f);
+    fread((B*)&y,1,4,f);
+    fread((B*)&n,1,4,f);
+    fread((B*)&clk,1,4,f);
+    y>>=1;
 
-    fp=fopen(pth.c_str(),"wb");
+    fp=fopen(f_out.c_str(),"wb");
 
-    // fprintf(fp,"%d %d %d %d ",x,y,n,clk);
+    // fprintf(fp,"%d %d %d %d \n\n",x,y,n,clk);
     uout(x);
-    p32();
+    ptc(32);
     uout(y);
-    p32();
+    ptc(32);
     uout(n);
-    p32();
+    ptc(32);
     uout(clk);
-    p32();
-    flush10(fp);
-    flush10(fp);
+    ptc(32);
+    ptc(10);
+    ptc(10);
+
+    fflush(fp);
 
     int l[x];
     for(auto frame=0;frame<n;frame++){
@@ -161,12 +167,14 @@ inline void encode_ascii(std::string pth,std::string data,std::string font,int o
             for(auto i=0;i<x;i++){
                 ptc(map[l[i]][gtc()]);
             }
-            flush10(fp);
+            ptc(10);
         }
-        flush10(fp);
+        ptc(10);
+        fflush(fp);
 
         if(!(frame&255)){
-            printf("%d\n",frame);
+            printf("%d ",frame);
+            fflush(stdout);
         }
     }
     fclose(f);
