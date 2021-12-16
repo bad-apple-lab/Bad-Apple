@@ -1,7 +1,8 @@
 // code by userElaina
 #include "encode.hpp"
 
-// config
+// config Bad Apple!!
+/*
 std::string name="1080p.mp4";
 #if defined(__WINDOWS_) || defined(_WIN32)
     std::string f_map="C:\\test\\BadApple\\1\\consola_0_0ff.data";
@@ -12,6 +13,22 @@ std::string name="1080p.mp4";
 #endif
 int width=76,height=54;
 int fps=15;
+*/
+
+// config 19260817
+// /*
+std::string name="19260817.mp4";
+#if defined(__WINDOWS_) || defined(_WIN32)
+    std::string f_map="C:\\test\\BadApple\\1\\consola_0_0ff.data";
+    std::string dir="C:\\Test\\BadApple\\Video\\";
+#else
+    std::string f_map="~/test/BadApple/1/consola_0_0ff.data";
+    // std::string dir="~/test/BadApple/";
+#endif
+int width=96,height=72;
+int fps=99;
+// */
+
 
 int main(){
     // preprocess
@@ -33,7 +50,9 @@ int main(){
     std::string f_data=fs_temp+named+"_"+std::to_string(width)+"x"+std::to_string(height)+"_"+std::to_string(fps)+".data";
     std::string f_data2=dir+named+".badapple";
 
-    split(f_v,f_bmp,f_conf);
-    encode(f_data,fs_bmp,f_conf,width,height,fps);
+    // split(f_v,f_bmp,f_conf);
+    int maxmin=encode(f_data,fs_bmp,f_conf,width,height,fps);
+    int max=maxmin>>8,min=maxmin&0xff;
+    printf("white=0x%02x black=0x%02x\n\n",max,min);
     encode2(f_data2,f_data,f_map);
 }

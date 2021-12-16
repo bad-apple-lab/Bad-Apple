@@ -53,14 +53,14 @@ inline void split(std::string f_v,std::string f_bmp,std::string f_conf){
     system(order.c_str());
 }
 
-inline void encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,int y,double fps){
+inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,int y,double fps){
     printf("enocde\n");
     double duration;
     int nb_frames;
     f=fopen(f_conf.c_str(),"r");
     fscanf(f,"%lf%d",&duration,&nb_frames);
     fclose(f);
-    printf("%.2lf %d\n",duration,nb_frames);
+    printf("duration=%.2lf\nnb_frames=%d\n",duration,nb_frames);
 
     int mo=0.5+((double)nb_frames)/duration/fps;
     if(!mo){
@@ -71,7 +71,7 @@ inline void encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x
     const int x2=x+(x&1),y2=y+(y&1);
     const int xy2=x2*y2;
 
-    printf("%d %d %d %d\n",x2,y2,n2,clk);
+    printf("%dx%d\nfps=%d\nclk=%d\n",x2,y2,n2,clk);
 
     fp=fopen(f_out.c_str(),"wb");
 
@@ -81,6 +81,7 @@ inline void encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x
     fwrite((B*)&clk,1,4,fp);
     fflush(fp);
 
+    int max=0xff,min=0x00;
     BMP24bits*p;
     BMP24bits*p2;
     B*map=(B*)malloc(xy2);
@@ -95,9 +96,18 @@ inline void encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x
         for(int j=0;j<y;j++){
             const int delta=(y2-1-j)*x2;
             for(int i=0;i<x;i++){
-                map[delta+i]=p2->getb(i,j);
+                auto c=p2->getb(i,j);
+                if(c>max){
+                    max=c;
+                }
+                if(c<min){
+                    min=c;
+                }
+                map[delta+i]=c;
             }
         }
+        // pth=fs_bmp+std::to_string(i)+"g.png";
+        // p2->save(pth);
         delete p2;
 
         fwrite(map,1,xy2,fp);
@@ -108,7 +118,10 @@ inline void encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x
             fflush(stdout);
         }
     }
+    pt(10);
+    pt(10);
     fclose(fp);
+    return max<<8|min;
 }
 
 inline void encode2(std::string f_out,std::string f_in,std::string f_map){
@@ -172,6 +185,8 @@ inline void encode2(std::string f_out,std::string f_in,std::string f_map){
             fflush(stdout);
         }
     }
+    pt(10);
+    pt(10);
     fclose(f);
     fclose(fp);
 }

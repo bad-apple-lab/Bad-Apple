@@ -1,6 +1,6 @@
 # code by userElaina
 
-# conf
+# config consola
 import os
 dpi=128
 ascii_x=15

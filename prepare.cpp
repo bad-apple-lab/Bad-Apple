@@ -1,7 +1,7 @@
 // code by userElaina
 #include "prepare.hpp"
 
-// conf
+// config consola
 std::string name="consola.ttf";
 #if defined(__WINDOWS_) || defined(_WIN32)
     std::string dir="C:\\test\\BadApple\\1\\";
