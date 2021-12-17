@@ -67,7 +67,7 @@ inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,
         mo=1;
     }
     const int n2=(nb_frames-1)/mo+1;
-    const int clk=0.5+duration*1000.0*(double)mo/(double)nb_frames;
+    const int clk=0.5+duration*1000000.0*(double)mo/(double)nb_frames;
     const int x2=x+(x&1),y2=y+(y&1);
     const int xy2=x2*y2;
 
