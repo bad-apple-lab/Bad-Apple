@@ -1,8 +1,8 @@
 // code by userElaina
 #include "encode.hpp"
 
+/*
 // config Bad Apple!!
-// /*
 std::string name="1080p.mp4";
 #if defined(__WINDOWS_) || defined(_WIN32)
     std::string f_map="C:\\test\\BadApple\\1\\consola_0_0ff.data";
@@ -14,10 +14,24 @@ std::string name="1080p.mp4";
 // int width=361,height=270;
 int width=76,height=54;
 int fps=15;
+*/
+
+// /*
+// config Elaina
+std::string name="NCOP.mkv";
+#if defined(__WINDOWS_) || defined(_WIN32)
+    std::string f_map="C:\\test\\BadApple\\1\\consola_0_0ff.data";
+    std::string dir="C:\\Test\\BadApple\\Video\\";
+#else
+    std::string f_map="~/test/BadApple/1/consola_0_0ff.data";
+    // std::string dir="~/test/BadApple/";
+#endif
+int width=384,height=216;
+double fps=99;
 // */
 
-// config 19260817
 /*
+// config 19260817
 std::string name="19260817.mp4";
 #if defined(__WINDOWS_) || defined(_WIN32)
     std::string f_map="C:\\test\\BadApple\\1\\consola_0_0ff.data";

@@ -31,10 +31,13 @@
 #define ERR_SIZE_3 (-15)
 
 #define size_head 0x36
-#define DEFAULT_Y -2147483647
-#define DEFAULT_Z -2147483646
-#define DEFAULT_G -2147483643
-#define DEFAULT_B -2147483642
+#define DEFAULT_X -2147483646
+#define DEFAULT_Y -2147483645
+#define DEFAULT_Z -2147483644
+#define DEFAULT_R -2147483643
+#define DEFAULT_G -2147483642
+#define DEFAULT_B -2147483641
+#define DEFAULT_A -2147483640
 
 
 #if defined(__WINDOWS_) || defined(_WIN32)
@@ -97,23 +100,15 @@ private:
             reg>>=8;
         }
     }
-    inline int _getxy(int x,int y=DEFAULT_Y){
-        if(y==DEFAULT_Y){
-            if(x<0||x>=size)
-                return ERR_SIZE_3;
-        }else{
-            if(x<0||y<0||x>=width||y>=height)
-                return ERR_SIZE_3;
-            x=x+y*width;
-        }
-        return x;
-    }
 
 public:
     int size,width,height,code;
     B*o;
     int*tag;
     int lastag=0;
+    // int _min,_max;
+    // int gray_max,gray_min;
+
     B head[size_head]={
         0x42,0x4d,0xff,0xff,    0xff,0xff,0x00,0x00,    0x00,0x00,0x36,0x00,    0x00,0x00,0x28,0x00,
         0x00,0x00,0xff,0xff,    0xff,0xff,0xff,0xff,    0xff,0xff,0x01,0x00,    0x18,0x00,0x00,0x00,
@@ -237,66 +232,66 @@ public:
         return 0;
     }
 
-    inline int getag(int x,int y=DEFAULT_Y){
-        if((x=_getxy(x,y))<0)
+    inline int getp(int x,const int y=DEFAULT_Y){
+        if(y==DEFAULT_Y){
+            if(x<0||x>=size){
+                printf("ERROR %d>=%d\n",x,size);
+                return ERR_SIZE_3;
+            }
             return x;
-        return tag[x];
+        }else{
+            if(x<0||y<0||x>=width||y>=height){
+                printf("ERROR %d>=%d %d>=%d\n",x,width,y,height);
+                return ERR_SIZE_3;
+            }
+            return x+y*width;
+        }
     }
 
-    inline B getb(int x,int y=DEFAULT_Y){
-        if((x=_getxy(x,y))<0)
-            return x;
-        return o[x+(x<<1)];
-    }
-    inline B getg(int x,int y=DEFAULT_Y){
-        if((x=_getxy(x,y))<0)
-            return x;
-        return o[x+(x<<1)+1];
-    }
-    inline B getr(int x,int y=DEFAULT_Y){
-        if((x=_getxy(x,y))<0)
-            return x;
-        return o[x+((x+1)<<1)];
+    inline int getag(const int p){
+        return tag[p];
     }
 
-    inline int getpixel(int x,int y=DEFAULT_Y){
-        if((x=_getxy(x,y))<0)
-            return x;
-        x=x+(x<<1);
-        register int b=o[x++];
-        register int g=o[x++];
-        register int r=o[x];
+    inline B getb(const int p){
+        return o[p+(p<<1)];
+    }
+    inline B getg(const int p){
+        return o[p+(p<<1)+1];
+    }
+    inline B getr(const int p){
+        return o[p+((p+1)<<1)];
+    }
+
+    inline int getpixel(const int p){
+        int p3=p+(p<<1);
+        const int b=o[p3++];
+        const int g=o[p3++];
+        const int r=o[p3];
         return r<<16|g<<8|b;
     }
 
-    inline int setag(int x,int y=DEFAULT_Y,int z=DEFAULT_Z){
-        if((x=_getxy(x,y))<0)
-            return x;
+    inline int setag(const int p,const int z=DEFAULT_Z){
         if(z^DEFAULT_Z)lastag=z;
-        tag[x]=lastag;
+        tag[p]=lastag;
         return 0;
     }
 
-    inline int setpixel(int x,int y=DEFAULT_Y,int r=0x000000,int g=DEFAULT_G,int b=DEFAULT_B,int a=0){
-        if((x=_getxy(x,y))<0)
-            return x;
-        x=x+(x<<1);
-        if((r=argb(r,g,b,a))<0)
-            return r;
-        o[x++]=r&0xff;
-        r>>=8;
-        o[x++]=r&0xff;
-        r>>=8;
-        o[x]=r;
+    inline int setpixel(const int p,const int rgb=0x000000){
+        const int b=rgb&0xff;
+        const int g=(rgb>>8)&0xff;
+        const int r=rgb>>16;
+        int p3=p+(p<<1);
+        o[p3++]=b;
+        o[p3++]=g;
+        o[p3]=r;
         return 0;
     }
 
-    inline int bgray(int r=0xffffff,int g=DEFAULT_G,int b=DEFAULT_B,int a=0){
-        if((r=argb(r,g,b,a))<0)
-            return r;
-        b=r&0xff;
-        g=(r>>=8)&0xff;
-        r>>=8;
+
+    inline int bgray(const int rgb=0xffffff){
+        const int b=rgb&0xff;
+        const int g=(rgb>>8)&0xff;
+        const int r=rgb>>16;
         for(int i=0;i<size_o;){
             const int c=299*o[i+2]+587*o[i+1]+114*o[i];
             o[i++]=(c*b+127500)/255000;
@@ -306,12 +301,11 @@ public:
         return 0;
     }
 
-    inline int wgray(int r=0x000000,int g=DEFAULT_G,int b=DEFAULT_B,int a=0){
-        if((r=argb(r,g,b,a))<0)
-            return r;
-        b=(r&0xff)^0xff;
-        g=((r>>=8)&0xff)^0xff;
-        r=(r>>8)^0xff;
+
+    inline int wgray(const int rgb=0x000000){
+        const int b=(rgb&0xff)^0xff;
+        const int g=((rgb>>8)&0xff)^0xff;
+        const int r=(rgb>>16)^0xff;
         for(int i=0;i<size_o;){
             const int c=255000-(299*o[i+2]+587*o[i+1]+114*o[i]);
             o[i++]=((c*b+127500)/255000)^0xff;
@@ -321,17 +315,85 @@ public:
         return 0;
     }
 
-    inline int gray(int r=0x000000,int g=DEFAULT_G,int b=DEFAULT_B,int a=0){
-        if((r=argb(r,g,b,a))<0)
-            return r;
-        b=r&0xff;
-        g=(r>>=8)&0xff;
-        r>>=8;
+    inline int gray(const int rgb=0x000000){
+        const int b=rgb&0xff;
+        const int g=(rgb>>8)&0xff;
+        const int r=rgb>>16;
         // if((299*r+587*g+114*b)>128*1000)
         if((306*r+601*g+117*b)&131072)
-            return bgray(r,g,b);
+            return bgray(rgb);
         else
-            return wgray(r,g,b);
+            return wgray(rgb);
+    }
+
+
+    // inline int update_max_min(){return linear(0);}
+
+    inline int linear(int con=0b111){
+        return linear(con,0x000000,0xffffff);
+    }
+
+    inline int linear(int con,int rgb_black1,int rgb_white1){
+        int b_max=0x00,g_max=0x00,r_max=0x00;
+        int b_min=0xff,g_min=0xff,r_min=0xff;
+        for(int i=0;i<size_o;){
+            b_max=b_max>o[i]?b_max:o[i];
+            b_min=b_min<o[i]?b_min:o[i];
+            i++;
+            g_max=g_max>o[i]?g_max:o[i];
+            g_min=g_min<o[i]?g_min:o[i];
+            i++;
+            r_max=r_max>o[i]?r_max:o[i];
+            r_min=r_min<o[i]?r_min:o[i];
+            i++;
+        }
+        int _min=r_min<<16|g_min<<8|b_min;
+        int _max=r_max<<16|g_max<<8|b_max;
+        return linear(con,rgb_black1,rgb_white1,_min,_max);
+    }
+
+    inline int linear(int con,int rgb_black1,int rgb_white1,int rgb_black0,int rgb_white0){
+        if(!con)return 1;
+
+        const int b_black1=rgb_black1&0xff;
+        const int g_black1=(rgb_black1>>8)&0xff;
+        const int r_black1=rgb_black1>>16;
+
+        const int b_white1=rgb_white1&0xff;
+        const int g_white1=(rgb_white1>>8)&0xff;
+        const int r_white1=rgb_white1>>16;
+
+        const int b_lv1=b_white1-b_black1;
+        const int g_lv1=g_white1-g_black1;
+        const int r_lv1=r_white1-r_black1;
+
+        const int b_black0=rgb_black0&0xff;
+        const int g_black0=(rgb_black0>>8)&0xff;
+        const int r_black0=rgb_black0>>16;
+
+        const int b_white0=rgb_white0&0xff;
+        const int g_white0=(rgb_white0>>8)&0xff;
+        const int r_white0=rgb_white0>>16;
+
+        const int b_lv0=b_white0-b_black0;
+        const int g_lv0=g_white0-g_black0;
+        const int r_lv0=r_white0-r_black0;
+
+        for(int i=0;i<size_o;){
+            if(con&1){
+                o[i]=b_lv0?(o[i]-b_black0)*b_lv1/b_lv0+b_black1:(o[i]&128?b_white1:b_black1);
+            }
+            i++;
+            if(con&2){
+                o[i]=g_lv0?(o[i]-g_black0)*g_lv1/g_lv0+g_black1:(o[i]&128?g_white1:g_black1);
+            }
+            i++;
+            if(con&4){
+                o[i]=r_lv0?(o[i]-r_black0)*r_lv1/r_lv0+r_black1:(o[i]&128?r_white1:r_black1);
+            }
+            i++;
+        }
+        return 0;
     }
 
     inline BMP24bits*resize(LL x,LL y,int f=0){
@@ -368,9 +430,10 @@ public:
             for(int xi=xl;xi<=xr;xi++){
                 for(int yj=yl;yj<=yr;yj++){
                     v2++;
-                    b2+=getb(xi,yj);
-                    g2+=getg(xi,yj);
-                    r2+=getr(xi,yj);
+                    const int p=getp(xi,yj);
+                    b2+=getb(p);
+                    g2+=getg(p);
+                    r2+=getr(p);
                 }
             }
             v=x*y;
@@ -383,9 +446,10 @@ public:
             v2=b2=g2=r2=0;
             for(int yj=yl;yj<=yr;yj++){
                 v2++;
-                b2+=getb(xl,yj);
-                g2+=getg(xl,yj);
-                r2+=getr(xl,yj);
+                const int p=getp(xl,yj);
+                b2+=getb(p);
+                g2+=getg(p);
+                r2+=getr(p);
             }
             v=fu(dxl*y);
             check+=v2*v;
@@ -397,9 +461,10 @@ public:
             v2=b2=g2=r2=0;
             for(int yj=yl;yj<=yr;yj++){
                 v2++;
-                b2+=getb(xr,yj);
-                g2+=getg(xr,yj);
-                r2+=getr(xr,yj);
+                const int p=getp(xr,yj);
+                b2+=getb(p);
+                g2+=getg(p);
+                r2+=getr(p);
             }
             v=fu(dxr*y);
             check+=v2*v;
@@ -411,9 +476,10 @@ public:
             v2=b2=g2=r2=0;
             for(int xi=xl;xi<=xr;xi++){
                 v2++;
-                b2+=getb(xi,yl);
-                g2+=getg(xi,yl);
-                r2+=getr(xi,yl);
+                const int p=getp(xi,yl);
+                b2+=getb(p);
+                g2+=getg(p);
+                r2+=getr(p);
             }
             v=fu(x*dyl);
             check+=v2*v;
@@ -425,9 +491,10 @@ public:
             v2=b2=g2=r2=0;
             for(int xi=xl;xi<=xr;xi++){
                 v2++;
-                b2+=getb(xi,yr);
-                g2+=getg(xi,yr);
-                r2+=getr(xi,yr);
+                const int p=getp(xi,yr);
+                b2+=getb(p);
+                g2+=getg(p);
+                r2+=getr(p);
             }
             v=fu(x*dyr);
             check+=v2*v;
@@ -436,9 +503,10 @@ public:
             r+=r2*v;
 
             // left up
-            b2=getb(xl,yl);
-            g2=getg(xl,yl);
-            r2=getr(xl,yl);
+            const int pll=getp(xl,yl);
+            b2=getb(pll);
+            g2=getg(pll);
+            r2=getr(pll);
             v=dxl*dyl;
             check+=v;
             b+=b2*v;
@@ -446,9 +514,10 @@ public:
             r+=r2*v;
 
             // right up
-            b2=getb(xr,yl);
-            g2=getg(xr,yl);
-            r2=getr(xr,yl);
+            const int prl=getp(xr,yl);
+            b2=getb(prl);
+            g2=getg(prl);
+            r2=getr(prl);
             v=dxr*dyl;
             check+=v;
             b+=b2*v;
@@ -456,9 +525,10 @@ public:
             r+=r2*v;
 
             // left down
-            b2=getb(xl,yr);
-            g2=getg(xl,yr);
-            r2=getr(xl,yr);
+            const int plr=getp(xl,yr);
+            b2=getb(plr);
+            g2=getg(plr);
+            r2=getr(plr);
             v=dxl*dyr;
             check+=v;
             b+=b2*v;
@@ -466,9 +536,10 @@ public:
             r+=r2*v;
 
             // right down
-            b2=getb(xr,yr);
-            g2=getg(xr,yr);
-            r2=getr(xr,yr);
+            const int prr=getp(xr,yr);
+            b2=getb(prr);
+            g2=getg(prr);
+            r2=getr(prr);
             v=dxr*dyr;
             check+=v;
             b+=b2*v;
@@ -480,7 +551,7 @@ public:
                 exit(0);
             }
 
-            p->setpixel(i,j,(r+(size>>1))/size,(g+(size>>1))/size,(b+(size>>1))/size);
+            p->setpixel(p->getp(i,j),argb((r+(size>>1))/size,(g+(size>>1))/size,(b+(size>>1))/size));
         }
         return p;
     }
