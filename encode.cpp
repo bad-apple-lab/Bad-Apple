@@ -26,8 +26,8 @@ std::string name="NCOP.mkv";
     std::string f_map="~/test/BadApple/1/consola_0_0ff.data";
     // std::string dir="~/test/BadApple/";
 #endif
-int width=384,height=216;
-double fps=99;
+int width=192,height=108;
+double fps=12;
 // */
 
 /*

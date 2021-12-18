@@ -10,7 +10,7 @@ const char*music="C:\\Test\\BadApple\\Video\\videoplayback.m4a";
 
 // /*
 // config 
-const char*s="C:\\Test\\BadApple\\Video\\NCOP_384x216_99.badapple";
+const char*s="C:\\Test\\BadApple\\Video\\NCOP_192x108_12.badapple";
 const char*music="C:\\Test\\BadApple\\Video\\NCOP.mkv";
 // */
 

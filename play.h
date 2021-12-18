@@ -83,5 +83,5 @@ inline void play(const char*s,const char*music){
         }
         t0=t1;
     }
-
+    printf("\x1b[256F\x1b[0J");
 }
