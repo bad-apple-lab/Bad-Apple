@@ -71,6 +71,7 @@ inline void play(const char*s,const char*music){
     if(strlen(music)){
         ffplay(music);
     }
+
     gettimeofday(&t0,NULL);
     for(int i=0;i<n;i++){
         g13();
@@ -83,5 +84,7 @@ inline void play(const char*s,const char*music){
         }
         t0=t1;
     }
+
+    fclose(f);
     printf("\x1b[256F\x1b[0J");
 }
