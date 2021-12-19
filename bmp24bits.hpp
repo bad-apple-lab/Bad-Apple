@@ -272,13 +272,11 @@ public:
 
     inline int setag(const int p,const int v){
         lastag=v;
-        setag(p);
-        return 0;
+        return setag(p);
     }
 
     inline int setag(const int p){
-        tag[p]=lastag;
-        return 0;
+        return tag[p]=lastag;
     }
 
     inline int setpixel(const int p,const int rgb=0x000000){

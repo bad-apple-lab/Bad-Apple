@@ -1,5 +1,4 @@
 // code by userElaina
-// #include "bmp24bits_archive.hpp"
 #include "bmp24bits.hpp"
 
 const int MAXCOL=0x100;
@@ -101,7 +100,6 @@ inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,
         for(int j=0;j<y;j++){
             const int delta=(y2-1-j)*x2;
             for(int i=0;i<x;i++){
-                // B c=p2->getb(i,j);
                 map[delta+i]=p2->getb(p2->getp(i,j));
             }
         }
@@ -224,7 +222,6 @@ inline int encode(std::string f_bmp,std::string f_map,int x,int y){
     const int x2=x+(x&1),y2=y+(y&1);
     const int xy2=x2*y2;
 
-    // Experimental function: Contrast enhancement.
     p2->linear(1);
 
     int l[x2];
