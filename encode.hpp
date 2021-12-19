@@ -54,8 +54,10 @@ inline void split(std::string f_v,std::string f_bmp,std::string f_conf){
     system(order.c_str());
 }
 
+
+// video
 inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,int y,double fps,int save_gray=0){
-    printf("enocde\n");
+    printf("enocde_video\n");
     double duration;
     int nb_frames;
     f=fopen(f_conf.c_str(),"r");
@@ -82,7 +84,6 @@ inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,
     fwrite((B*)&clk,1,4,fp);
     fflush(fp);
 
-    int max=0xff,min=0x00;
     BMP24bits*p;
     BMP24bits*p2;
     B*map=(B*)malloc(xy2);
@@ -101,10 +102,7 @@ inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,
             const int delta=(y2-1-j)*x2;
             for(int i=0;i<x;i++){
                 // B c=p2->getb(i,j);
-                B c=p2->getb(p2->getp(i,j));
-                max=c>max?c:max;
-                min=c<min?c:min;
-                map[delta+i]=c;
+                map[delta+i]=p2->getb(p2->getp(i,j));
             }
         }
         if(save_gray){
@@ -124,9 +122,10 @@ inline int encode(std::string f_out,std::string fs_bmp,std::string f_conf,int x,
     pt(10);
     pt(10);
     fclose(fp);
-    return max<<8|min;
+    return 0;
 }
 
+// video
 inline void encode2(std::string f_out,std::string f_in,std::string f_map){
     printf("enocde2\n");
 
@@ -192,4 +191,60 @@ inline void encode2(std::string f_out,std::string f_in,std::string f_map){
     pt(10);
     fclose(f);
     fclose(fp);
+}
+
+// image
+inline int encode(std::string f_bmp,std::string f_map,int x,int y){
+    printf("enocde_image\n");
+
+    f=fopen(f_map.c_str(),"rb");
+
+    int map[MAXCOL][MAXCOL];
+    for(auto i=0;i<MAXCOL;i++){
+        for(auto j=0;j<MAXCOL;j++){
+            g13();
+            map[i][j]=g13();
+        }
+        g13();
+    }
+    fclose(f);
+
+    for(auto i=0;i<MAXCOL;i++){
+        pt(map[i][i]);
+    }
+    pt(10);
+
+    BMP24bits*p;
+    BMP24bits*p2;
+    p=new BMP24bits(bmp(f_bmp));
+    p2=p->resize(x,y);
+    delete p;
+    p2->gray();
+
+    const int x2=x+(x&1),y2=y+(y&1);
+    const int xy2=x2*y2;
+
+    // Experimental function: Contrast enhancement.
+    p2->linear(1);
+
+    int l[x2];
+    memset(l,0,sizeof(l));
+    for(int j=y-1;j;j--){
+        if(j&1){
+            for(int i=0;i<x;i++){
+                l[i]=p2->getb(p2->getp(i,j));
+            }
+        }else{
+            for(auto i=0;i<x;i++){
+                pt(map[l[i]][p2->getb(p2->getp(i,j))]);
+            }
+            if(x&1){
+                pt(map[0][0]);
+            }
+            pt(10);
+        }
+    }
+
+    delete p2;
+    return 0;
 }

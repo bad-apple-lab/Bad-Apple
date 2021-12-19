@@ -270,8 +270,13 @@ public:
         return r<<16|g<<8|b;
     }
 
-    inline int setag(const int p,const int z=DEFAULT_Z){
-        if(z^DEFAULT_Z)lastag=z;
+    inline int setag(const int p,const int v){
+        lastag=v;
+        setag(p);
+        return 0;
+    }
+
+    inline int setag(const int p){
         tag[p]=lastag;
         return 0;
     }

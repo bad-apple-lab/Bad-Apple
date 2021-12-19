@@ -16,7 +16,7 @@ int width=76,height=54;
 int fps=15;
 */
 
-// /*
+/*
 // config Elaina
 std::string name="NCOP.mkv";
 #if defined(__WINDOWS_) || defined(_WIN32)
@@ -26,9 +26,9 @@ std::string name="NCOP.mkv";
     std::string f_map="~/test/BadApple/1/consola_0_0ff.data";
     // std::string dir="~/test/BadApple/";
 #endif
-int width=192,height=108;
+int width=384,height=216;
 double fps=12;
-// */
+*/
 
 /*
 // config 19260817
@@ -43,6 +43,20 @@ std::string name="19260817.mp4";
 int width=192,height=144;
 double fps=999;
 */
+
+// /*
+// config
+std::string name="pink_pet_bottle,_fujiwara_no_mokou,_houraisan_kaguya,_inaba_tewi.mp4";
+#if defined(__WINDOWS_) || defined(_WIN32)
+    std::string f_map="C:\\test\\BadApple\\1\\consola_0_0ff.data";
+    std::string dir="C:\\All\\Desktop\\";
+#else
+    std::string f_map="~/test/BadApple/1/consola_0_0ff.data";
+    // std::string dir="~/test/BadApple/";
+#endif
+int width=192,height=108;
+double fps=15;
+// */
 
 
 int main(){
@@ -66,9 +80,7 @@ int main(){
     std::string f_data=fs_temp+named+ext+".data";
     std::string f_data2=dir+named+ext+".badapple";
 
-    // split(f_v,f_bmp,f_conf);
-    int maxmin=encode(f_data,fs_bmp,f_conf,width,height,fps);
-    int max=maxmin>>8,min=maxmin&0xff;
-    printf("white=0x%02x black=0x%02x\n\n",max,min);
+    split(f_v,f_bmp,f_conf);
+    encode(f_data,fs_bmp,f_conf,width,height,fps);
     encode2(f_data2,f_data,f_map);
 }
