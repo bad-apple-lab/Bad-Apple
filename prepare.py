@@ -7,10 +7,7 @@ ascii_x=15
 ascii_y=32
 fout_size=26
 offset=5
-if os.name=='posix':
-    f_font='~/test/BadApple/consola.ttf'
-else:
-    f_font='C:\\test\\BadApple\\1\\consola.ttf'
+f_font='./consola.ttf'
 chars='ascii'
 # cmd: offset=5
 
