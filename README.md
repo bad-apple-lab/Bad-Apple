@@ -8,35 +8,56 @@
 
 实时版最高支持到 **720p30Hz**, 瓶颈是 **编码解码速度**.
 
-#### 环境依赖
+### Environmental Dependence
 
-预处理(字体):
-CPP 环境.
-Python3 环境.
-Pillow 包 (安装方式: `pip install Pillow`).
+#### Preprocessing (fonts)
+CPP and Python3.
+Python module Pillow (`pip install Pillow`).
 
-编译:
-CPP 环境.
+#### Compile
+Usually, as long as you can compile the CPP.
 
-运行:
-命令行工具: `awk` `grep` `ffmpeg` (包括 `ffmpeg` `ffprobe` `ffplay`).
+#### Run
+`awk` `grep` `ffmpeg` (Include `ffmpeg` `ffprobe` `ffplay`).
 
+##### Windows
+[GnuWin](http://gnuwin32.sourceforge.net/)
+[FFmpeg](https://github.com/BtbN/FFmpeg-Builds/releases/tag/latest)
+
+##### Ubuntu / Debian
+```sh
+sudo apt update
+sudo apt install ffmpeg
+```
+
+##### CentOS / RedHat
+```sh
+sudo yum update
+sudo yum install ffmpeg
+```
+
+##### Arch Linux
+```sh
+sudo pacman -Syu ffmpeg
+```
 
 #### 编译运行
 
-Windows
+##### Windows
 ```sh
-clang++ demo.cpp -o demo.exe -w -g -O2 -static-libgcc --target=x86_64-w64-mingw
-./demo
+clang++ 'badapple.cpp' -lpthread -o 'badapple.exe' -w -g -O2 -static-libgcc --target=x86_64-w64-mingw -std=c++20 -finput-charset=UTF-8 -fexec-charset=UTF-8
+./badapple
 ```
 
-Linux
+##### Linux
 ```sh
-g++ demo.cpp -o demo
-./demo
+g++ ./badapple.cpp -o badapple
+./badapple
 ```
 
 #### To do
 
-命令行工具
+Nothing to do.
+
+Ideas are welcome.
 
