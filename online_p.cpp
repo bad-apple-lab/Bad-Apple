@@ -14,7 +14,7 @@ int main(){
     int line_size=width*3;
     int full_size=height*line_size;
     B*t=p->o+full_size;
-    
+
     FILE*pipe=_popen(order.c_str(),"rb");
     if(!pipe){printf("what the fuck1\n");return 1;}
 

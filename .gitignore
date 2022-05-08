@@ -1,0 +1,15 @@
+.vscode/
+
+# Executables
+*.exe
+*.out
+
+# video
+*.mp4
+*.avi
+*.mov
+
+Archive/
+1/
+*/temp/
+

@@ -1,6 +1,7 @@
 // code by userElaina
 #include<bits/stdc++.h>
 #include<sys/time.h>
+#include "consola_0_0ff.h"
 
 #define LL long long
 #define ULL unsigned long long
@@ -16,6 +17,7 @@
 #else
     #include<unistd.h>
     #include<sys/types.h>
+    // #include<termios.h>
     std::string nul="/dev/null";
     std::string split_path="/";
     std::string awk_qm="'";
@@ -57,25 +59,26 @@ int exec_r(const char*cmd,char*result){
 
 
 FILE*f;
-inline int g13(){
+inline int g(){
     int c=getc(f);
-    while(c==13){
+    while(c==13||c==10){
         c=getc(f);
     }
     return c;
 }
 
-int play(std::string f_v,std::string f_map,int x,int y,int fps,int contrast_enhancement=0){
+int play(std::string video,std::string font,int x,int y,int fps,int contrast_enhancement=0){
     std::string command;
 
-    command=(std::string)"ffprobe -v quiet -show_streams -select_streams v \""+f_v+"\" | grep -E \"duration=|nb_frames=\" | awk -F= "+awk_qm+"{print $2}"+awk_qm;
+    command=(std::string)"ffprobe -v quiet -show_streams -select_streams v \""+video+"\" | grep -E \"duration=|nb_frames=|coded_width=|coded_height=\" | awk -F= "+awk_qm+"{print $2}"+awk_qm;
     // printf("%s\n",command.c_str());
 
     double duration;
     int nb_frames;
+    int width,height;
     char result[STDOUT_SIZE];
     if(!exec_r(command.c_str(),result)){
-        sscanf(result,"%lf%d",&duration,&nb_frames);
+        sscanf(result,"%d%d%lf%d",&width,&height,&duration,&nb_frames);
     }
 
     int mo=0.5+((double)nb_frames)/duration/fps;
@@ -88,33 +91,34 @@ int play(std::string f_v,std::string f_map,int x,int y,int fps,int contrast_enha
     // x+=x&1;
     y+=y&1;
     const int xy=x*y;
-    printf("%dx%d %.2lfHz %.3lfs\n",x,y,((double)n2)/duration,duration);
+    printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs\n",width,height,((double)nb_frames)/duration,x,y,((double)n2)/duration,duration);
 
-    // const int print_size=(x+1)*y;
     const int print_size=(x+1)*(y>>1);
     char buffer[print_size];
 
-    f=fopen(f_map.c_str(),"rb");
+    char map[MAXCOL][MAXCOL];
 
-    int map[MAXCOL][MAXCOL];
-    for(auto i=0;i<MAXCOL;i++){
-        for(auto j=0;j<MAXCOL;j++){
-            g13();
-            map[i][j]=g13();
+    if(font.size()){
+        f=fopen(font.c_str(),"rb");
+        for(auto i=0;i<MAXCOL;i++){
+            for(auto j=0;j<MAXCOL;j++){
+                g();
+                map[i][j]=g();
+            }
+            g();
         }
-        g13();
+        fclose(f);
+    }else{
+        for(auto i=0;i<MAXCOL;i++){
+            for(auto j=0;j<MAXCOL;j++){
+                map[i][j]=default_map[i][j<<1];
+            }
+        }
     }
-    fclose(f);
-
-    // for(auto i=0;i<MAXCOL;i++){
-    //     pt(map[i][i]);
-    // }
-    // pt(10);
-
 
     // read video
     int t=0;
-    command=(std::string)"ffmpeg -v quiet -i \""+f_v+"\" -vf scale="+std::to_string(x)+":"+std::to_string(y)+" -c:v rawvideo -pix_fmt gray -f rawvideo -";
+    command=(std::string)"ffmpeg -v quiet -i \""+video+"\" -vf scale="+std::to_string(x)+":"+std::to_string(y)+" -c:v rawvideo -pix_fmt gray -f rawvideo -";
     // printf("%s\n",command.c_str());
 
     // pipe
@@ -150,7 +154,7 @@ int play(std::string f_v,std::string f_map,int x,int y,int fps,int contrast_enha
         int z=fread(f,1,xy,pipe);
         if(xy^z){
             printf("error: fread=%d\n",z);
-            // return 1;
+            return 1;
         }
         if(i%mo){
             continue;
@@ -163,7 +167,7 @@ int play(std::string f_v,std::string f_map,int x,int y,int fps,int contrast_enha
             }
             if(max_pixel<0||min_pixel>255){
                 printf("error: max_pixel=%d,min_pixel=%d\n",max_pixel,min_pixel);
-                // return 1;
+                return 1;
             }
 
             if(max_pixel^min_pixel){
@@ -175,12 +179,6 @@ int play(std::string f_v,std::string f_map,int x,int y,int fps,int contrast_enha
             }
         }
 
-        // for(auto j=0;j<y;j++){
-        //     for(auto k=0;k<x;k++){
-        //         buffer[j*(x+1)+k]=map[f[j*x+k]][f[j*x+k]];
-        //     }
-        //     buffer[j*(x+1)+x]=10;
-        // }
         for(auto j=0;j<(y>>1);j++){
             for(auto k=0;k<x;k++){
                 buffer[j*(x+1)+k]=map[f[(j<<1)*x+k]][f[(j<<1|1)*x+k]];
@@ -192,7 +190,6 @@ int play(std::string f_v,std::string f_map,int x,int y,int fps,int contrast_enha
         fwrite(buffer,1,print_size,stdout);
         fflush(stdout);
 
-
         gettimeofday(&t1,NULL);
         while((t1.tv_sec-t0.tv_sec)*1000000+t1.tv_usec-t0.tv_usec<clk){
             gettimeofday(&t1,NULL);
@@ -200,7 +197,7 @@ int play(std::string f_v,std::string f_map,int x,int y,int fps,int contrast_enha
         t0=t1;
     }
 
-    
+    // pipe close
     #if defined(__WINDOWS_) || defined(_WIN32)
         _pclose(pipe);
     #else
