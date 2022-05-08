@@ -14,6 +14,7 @@ The pre-loaded version supports up to **1080p30Hz**, and the bottleneck is IO.
 
 
 ### Help
+
 ```markdown
 usage: badapple [options] ...
 options:
@@ -69,6 +70,7 @@ sudo yum install ffmpeg
 ```sh
 sudo pacman -Syu ffmpeg
 ```
+
 
 ### Compile and Run
 
