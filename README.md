@@ -91,7 +91,7 @@ clang++ 'badapple.cpp' -lpthread -o 'badapple.exe' -w -g -O2 -static-libgcc --ta
 ##### Linux
 
 ```sh
-g++ ./badapple.cpp -o badapple
+g++ ./badapple.cpp -o badapple.out
 ./badapple
 ```
 
