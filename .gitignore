@@ -10,5 +10,10 @@
 *.mov
 *.mkv
 
+# image
+# *.png
+# *.jpg
+*.bmp
+
 archive/
 */temp/
