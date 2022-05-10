@@ -10,7 +10,5 @@
 *.mov
 *.mkv
 
-Archive/
-1/
+archive/
 */temp/
-

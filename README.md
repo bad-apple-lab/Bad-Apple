@@ -1,9 +1,9 @@
 ## Bad Apple!!
 
-Tool to convert video to character drawing.
+Play the video in the console as a character drawing..
 ~~You can watch anime by it while you are connected by **SSH**.~~
 
-视频转字符画工具.
+以字符画的形式在控制台中播放视频.
 ~~你甚至可以利用它在 **SSH** 中看番.~~
 
 ![GIF](./play.gif)
@@ -69,6 +69,13 @@ sudo yum install ffmpeg
 
 ```sh
 sudo pacman -Syu ffmpeg
+```
+
+
+### Clone
+
+```sh
+git clone --recurse-submodules --remote-submodule git@github.com:userElaina/Bad-Apple.git
 ```
 
 
