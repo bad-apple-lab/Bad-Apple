@@ -16,13 +16,14 @@ The pre-loaded version supports up to **1080p30Hz**, and the bottleneck is IO.
 ### Help
 
 ```markdown
-usage: badapple [options] ...
+usage: badapple [options] ... 
 options:
   -i, --input                   video file (string [=./badapple.mp4])
   -m, --map                     font data file (string [=])
   -s, --scale                   width:height (string [=76:54])       
   -r, --rate                    set frame rate (int [=10])
       --contrast-enhancement    contrast enhancement
+      --play-sound              play sound with ffplay
   -?, --help                    print this message
 ```
 
@@ -97,6 +98,5 @@ g++ ./badapple.cpp -o badapple.out
 
 ### To do
 
-Nothing to do.
-
-Ideas are welcome.
+去依赖: FFmpeg
+命令行工具添加图片支持

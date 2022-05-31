@@ -9,9 +9,10 @@ int main(int argc,char**argv){
     a.add<std::string>("scale",'s',"width:height",false,"76:54");
     a.add<int>("rate",'r',"set frame rate",false,10);
     a.add("contrast-enhancement",'\0',"contrast enhancement");
+    a.add("play-sound",'\0',"play sound with ffplay");
     a.parse_check(argc,argv);
 
     int x,y;
     sscanf(a.get<std::string>("scale").c_str(),"%d:%d",&x,&y);
-    play(a.get<std::string>("input"),a.get<std::string>("map"),x,y,a.get<int>("rate"),a.exist("contrast-enhancement"));
+    play(a.get<std::string>("input"),a.get<std::string>("map"),x,y,a.get<int>("rate"),a.exist("contrast-enhancement"),a.exist("play-sound"));
 }

@@ -14,6 +14,7 @@
     std::string split_path="\\";
     std::string awk_qm="\"";
     std::string mkdir_p="mkdir ";
+    std::string bg_p="start /B %s";
 #else
     #include<unistd.h>
     #include<sys/types.h>
@@ -22,6 +23,7 @@
     std::string split_path="/";
     std::string awk_qm="'";
     std::string mkdir_p="mkdir -p ";
+    std::string bg_p="%s &";
 #endif
 
 const int BUFFER_SIZE=1<<8;
@@ -67,7 +69,15 @@ inline int g(){
     return c;
 }
 
-int play(std::string video,std::string font,int x,int y,int fps,int contrast_enhancement=0){
+inline void ffplay(std::string muz){
+    char command2[100];
+    std::string command="ffplay -v quiet -nodisp -autoexit -hide_banner \""+muz+"\"";
+    sprintf(command2,bg_p.c_str(),command.c_str());
+    printf("%s\n",command2);
+    system(command2);
+}
+
+inline int play(std::string video,std::string font,int x,int y,int fps,int contrast_enhancement=0,int play_sound=0){
     std::string command;
 
     command=(std::string)"ffprobe -v quiet -show_streams -select_streams v \""+video+"\" | grep -E \"duration=|nb_frames=|coded_width=|coded_height=\" | awk -F= "+awk_qm+"{print $2}"+awk_qm;
@@ -147,6 +157,7 @@ int play(std::string video,std::string font,int x,int y,int fps,int contrast_enh
     #endif
 
     printf("\x1b[256F\x1b[0J");
+    if(play_sound)ffplay(video);
     gettimeofday(&t0,NULL);
     for(auto i=0;i<nb_frames;i++){
         int max_pixel=-1,min_pixel=256;
