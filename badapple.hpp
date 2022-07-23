@@ -77,7 +77,7 @@ inline int play(
     char result_c[STDOUT_SIZE];
     if (exec_r(cmd.c_str(), result_c)) {
         throws("Failed to analysis video.");
-        return 0;
+        return 1;
     } else {
         // sscanf(result, "%d%d%lf%d", &width, &height, &duration, &nb_frames);
         std::string result_s(result_c), _k;
@@ -87,7 +87,7 @@ inline int play(
         p = result_s.find(_k);
         if (p == std::string::npos) {
             throws("This video has no width.");
-            return 0;
+            return 1;
         }
         p += _k.length();
         p2 = result_s.find("\n", p);
@@ -97,7 +97,7 @@ inline int play(
         p = result_s.find(_k);
         if (p == std::string::npos) {
             throws("This video has no height.");
-            return 0;
+            return 1;
         }
         p += _k.length();
         p2 = result_s.find("\n", p);
@@ -107,7 +107,7 @@ inline int play(
         p = result_s.find(_k);
         if (p == std::string::npos) {
             throws("This video has no frame rate.");
-            return 0;
+            return 1;
         }
         p += _k.length();
         p2 = result_s.find("/", p);
