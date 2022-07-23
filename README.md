@@ -19,11 +19,12 @@ The pre-loaded version supports up to **1080p30Hz**, and the bottleneck is IO.
 usage: badapple [options] ... 
 options:
   -i, --input                   video file (string [=./badapple.mp4])
+  -a, --audio                   audio file (string [=])
   -m, --map                     font data file (string [=])
   -s, --scale                   width:height (string [=76:54])       
   -r, --rate                    set frame rate (double [=10])        
       --contrast-enhancement    contrast enhancement
-      --play-sound              play sound with ffplay
+      --play-audio              play audio with ffplay
   -?, --help                    print this message
 ```
 
@@ -56,7 +57,7 @@ Usually, as long as you can compile the CPP.
 ##### Ubuntu / Debian
 
 ```sh
-sudo apt updatecompile
+sudo apt update
 sudo apt install ffmpeg
 ```
 
