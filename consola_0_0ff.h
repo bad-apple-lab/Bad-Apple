@@ -1,3 +1,5 @@
+#pragma once
+
 char default_map[0x100][0x201]={
     "                                              ................................................--------------------------------------,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,______________________________________________________________________________________________________________________________uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuaaaaaaaaaaaaaayyyyyyyyyyyyyyyyyyyywwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwgggggggggggggggggggggggggggggggggggggggggggg",
     "                                              ................................................--------------------------------------,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,____________________________________________________________________________________________________________________________uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuaaaaaaaaaaaaaayyyyyyyyyyyyyyyyyyyywwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwgggggggggggggggggggggggggggggggggggggggggggg",

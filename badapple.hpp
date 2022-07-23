@@ -1,6 +1,8 @@
-// code by userElaina
-#include<bits/stdc++.h>
-#include<sys/time.h>
+#pragma once
+
+#include <iostream>
+#include <cstring>
+#include <sys/time.h>
 #include "consola_0_0ff.h"
 
 #define LL long long
@@ -9,8 +11,20 @@
 #define pt putchar
 #define gt getchar
 
+void throws(const char *s){
+    throw std::runtime_error(std::string(s));
+}
+
+std::string background_process(std::string command){
+    #if defined(__WINDOWS_) || defined(_WIN32)
+        return "start /B "+command;
+    #else
+        return command+" &";
+    #endif
+}
+
 #if defined(__WINDOWS_) || defined(_WIN32)
-    std::string nul="nul";
+    // std::string nul="nul";
     std::string split_path="\\";
     std::string awk_qm="\"";
     std::string mkdir_p="mkdir ";
@@ -19,7 +33,7 @@
     #include<unistd.h>
     #include<sys/types.h>
     // #include<termios.h>
-    std::string nul="/dev/null";
+    // std::string nul="/dev/null";
     std::string split_path="/";
     std::string awk_qm="'";
     std::string mkdir_p="mkdir -p ";
@@ -70,38 +84,83 @@ inline int g(){
 }
 
 inline void ffplay(std::string muz){
-    char command2[100];
     std::string command="ffplay -v quiet -nodisp -autoexit -hide_banner \""+muz+"\"";
-    sprintf(command2,bg_p.c_str(),command.c_str());
-    printf("%s\n",command2);
-    system(command2);
+    system(background_process(command).c_str());
 }
 
 inline int play(std::string video,std::string font,int x,int y,int fps,int contrast_enhancement=0,int play_sound=0){
     std::string command;
 
-    command=(std::string)"ffprobe -v quiet -show_streams -select_streams v \""+video+"\" | grep -E \"duration=|nb_frames=|coded_width=|coded_height=\" | awk -F= "+awk_qm+"{print $2}"+awk_qm;
+    // analysis video
+    command=(std::string)"ffprobe -v quiet -show_streams -select_streams v \""+video+"\"";
     // printf("%s\n",command.c_str());
 
-    double duration;
-    int nb_frames;
     int width,height;
-    char result[STDOUT_SIZE];
-    if(!exec_r(command.c_str(),result)){
-        sscanf(result,"%d%d%lf%d",&width,&height,&duration,&nb_frames);
+    double rate_l,rate_r; // fps=rate_l/rate_r
+    double duration=0.0;
+    char result_c[STDOUT_SIZE];
+    if(exec_r(command.c_str(),result_c)){
+        throws("Failed to analysis video.");
+        return 0;
+    }else{
+        // sscanf(result,"%d%d%lf%d",&width,&height,&duration,&nb_frames);
+        std::string result_s(result_c),_k;
+        std::size_t p,p2;
+
+        _k="\nwidth=";
+        p=result_s.find(_k);
+        if(p==std::string::npos){
+            throws("This video has no width.");
+            return 0;
+        }
+        p+=_k.length();
+        p2=result_s.find("\n",p);
+        sscanf(result_s.substr(p,p2-p).c_str(),"%d",&width);
+
+        _k="\nheight=";
+        p=result_s.find(_k);
+        if(p==std::string::npos){
+            throws("This video has no height.");
+            return 0;
+        }
+        p+=_k.length();
+        p2=result_s.find("\n",p);
+        sscanf(result_s.substr(p,p2-p).c_str(),"%d",&height);
+
+        _k="\nr_frame_rate=";
+        p=result_s.find(_k);
+        if(p==std::string::npos){
+            throws("This video has no frame rate.");
+            return 0;
+        }
+        p+=_k.length();
+        p2=result_s.find("/",p);
+        sscanf(result_s.substr(p,p2-p).c_str(),"%lf",&rate_l);
+        p=p2+1;
+        p2=result_s.find("\n",p);
+        sscanf(result_s.substr(p,p2-p).c_str(),"%lf",&rate_r);
+
+        _k="\nduration=";
+        p=result_s.find(_k);
+        if(p!=std::string::npos){
+            p+=_k.length();
+            p2=result_s.find("\n",p);
+            sscanf(result_s.substr(p,p2-p).c_str(),"%lf",&duration);
+        }
     }
 
-    int mo=0.5+((double)nb_frames)/duration/fps;
+    double rate=rate_l/rate_r;
+    int mo=0.5+rate/fps;
     if(!mo){
         mo=1;
     }
-    const int n2=(nb_frames-1)/mo+1;
-    const int clk=0.5+duration*1000000.0*(double)mo/(double)nb_frames;
+    const int clk=0.5+1000000.0/rate_l*mo*rate_r;
 
     // x+=x&1;
     y+=y&1;
     const int xy=x*y;
-    printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs\n",width,height,((double)nb_frames)/duration,x,y,((double)n2)/duration,duration);
+    printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs\n",width,height,rate,x,y,rate/mo,duration);
+    // [1444:1080 29.97Hz] -> [76:54 9.99Hz] 232.065s
 
     const int print_size=(x+1)*(y>>1);
     char buffer[print_size];
@@ -127,19 +186,18 @@ inline int play(std::string video,std::string font,int x,int y,int fps,int contr
     }
 
     // read video
-    int t=0;
     command=(std::string)"ffmpeg -v quiet -i \""+video+"\" -vf scale="+std::to_string(x)+":"+std::to_string(y)+" -c:v rawvideo -pix_fmt gray -f rawvideo -";
     // printf("%s\n",command.c_str());
 
-    // pipe
+    // build pipe
     #if defined(__WINDOWS_) || defined(_WIN32)
         FILE*pipe=_popen(command.c_str(),"rb");
     #else
         FILE*pipe=popen(command.c_str(),"r");
     #endif
     if(!pipe){
-        printf("error: pipe\n\n");
-        exit(0);
+        throws("Failed to build pipe.");
+        return 1;
     }
 
     struct timeval t0;
@@ -159,13 +217,16 @@ inline int play(std::string video,std::string font,int x,int y,int fps,int contr
     printf("\x1b[256F\x1b[0J");
     if(play_sound)ffplay(video);
     gettimeofday(&t0,NULL);
-    for(auto i=0;i<nb_frames;i++){
+    for(auto i=0;;i++){
         int max_pixel=-1,min_pixel=256;
 
         int z=fread(f,1,xy,pipe);
         if(xy^z){
-            printf("error: fread=%d\n",z);
-            return 1;
+            if(i==0){
+                throws("The first frame is empty.");
+                return 1;
+            }
+            break;
         }
         if(i%mo){
             continue;
@@ -177,7 +238,7 @@ inline int play(std::string video,std::string font,int x,int y,int fps,int contr
                 if(f[j]<min_pixel)min_pixel=f[j];
             }
             if(max_pixel<0||min_pixel>255){
-                printf("error: max_pixel=%d,min_pixel=%d\n",max_pixel,min_pixel);
+                throws("Failed to build pipe.");
                 return 1;
             }
 
@@ -208,7 +269,7 @@ inline int play(std::string video,std::string font,int x,int y,int fps,int contr
         t0=t1;
     }
 
-    // pipe close
+    // close pipe
     #if defined(__WINDOWS_) || defined(_WIN32)
         _pclose(pipe);
     #else

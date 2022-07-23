@@ -21,14 +21,14 @@ options:
   -i, --input                   video file (string [=./badapple.mp4])
   -m, --map                     font data file (string [=])
   -s, --scale                   width:height (string [=76:54])       
-  -r, --rate                    set frame rate (int [=10])
+  -r, --rate                    set frame rate (double [=10])        
       --contrast-enhancement    contrast enhancement
       --play-sound              play sound with ffplay
   -?, --help                    print this message
 ```
 
 
-### Environmental Dependence
+### Dependencies
 
 #### Preprocessing (fonts)
 
@@ -45,17 +45,18 @@ Usually, as long as you can compile the CPP.
 
 #### Run
 
-`awk` `grep` `ffmpeg` (Include `ffmpeg` `ffprobe` `ffplay`).
+`ffmpeg` (Include `ffmpeg` `ffprobe` `ffplay`).
 
 ##### Windows
 
-[GnuWin](http://gnuwin32.sourceforge.net/)
 [FFmpeg](https://github.com/BtbN/FFmpeg-Builds/releases/tag/latest)
+
+`libstdc++-6.dll` `libgcc_s_seh-1.dll` `libwinpthread-1` (C++ compile dependencies)
 
 ##### Ubuntu / Debian
 
 ```sh
-sudo apt update
+sudo apt updatecompile
 sudo apt install ffmpeg
 ```
 
@@ -85,7 +86,7 @@ git clone --recurse-submodules --remote-submodule git@github.com:userElaina/Bad-
 ##### Windows
 
 ```sh
-clang++ 'badapple.cpp' -lpthread -o 'badapple.exe' -w -g -O2 -static-libgcc --target=x86_64-w64-mingw -std=c++20 -finput-charset=UTF-8 -fexec-charset=UTF-8
+clang++ 'badapple.cpp' -o 'badapple.exe' -w -g -O2 -static-libgcc --target=x86_64-w64-mingw -std=c++20
 ./badapple
 ```
 
@@ -93,10 +94,11 @@ clang++ 'badapple.cpp' -lpthread -o 'badapple.exe' -w -g -O2 -static-libgcc --ta
 
 ```sh
 g++ ./badapple.cpp -o badapple.out
-./badapple
+./badapple.out
 ```
 
 ### To do
 
-去依赖: FFmpeg
-命令行工具添加图片支持
+OpenCV Version
+
+Installer

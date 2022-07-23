@@ -9,10 +9,18 @@
 *.avi
 *.mov
 *.mkv
+*.wmv
+*.mpeg
+*.m4v
+*.flv
+*.rmvb
+*.ts
 
 # image
-# *.png
-# *.jpg
+*.png
+*.jpg
+*.jpeg
+*.webp
 *.bmp
 
 archive/
