@@ -8,9 +8,16 @@ Play the video in the console as a character drawing..
 
 ![GIF](./play.gif)
 
-The real-time version supports up to **720p30Hz**, the bottleneck is the encoding and decoding speed.
-
-The pre-loaded version supports up to **1080p30Hz**, and the bottleneck is IO.
+|   | OS      | Load Mode | Decoder | Support   | Bottleneck     |
+| - | -       | -         | -       | -         | -              |
+| 0 | Windows | real-time | FFmpeg  | 720p30Hz  | decoding speed |
+| 1 | Linnux  | real-time | FFmpeg  | 720p30Hz  | decoding speed |
+| 2 | Windows | preloaded | FFmpeg  | 1080p30Hz | IO             |
+| 3 | Linux   | preloaded | FFmpeg  | 1080p30Hz | IO             |
+| 4 | Windows | real-time | OpenCV  | 360p15Hz  | decoding speed |
+| 5 | Linnux  | real-time | OpenCV  |           | decoding speed |
+| 6 | Windows | preloaded | OpenCV  | 1080p30Hz | IO             |
+| 7 | Linux   | preloaded | OpenCV  | 1080p30Hz | IO             |
 
 
 ### Help
@@ -28,6 +35,13 @@ options:
   -?, --help                    print this message
 ```
 
+### To do
+
+OpenCV Version for Windows
+
+Add preload function to the command line tool
+
+Installer
 
 ### Dependencies
 
@@ -98,8 +112,3 @@ g++ ./badapple.cpp -o badapple.out
 ./badapple.out
 ```
 
-### To do
-
-OpenCV Version
-
-Installer
