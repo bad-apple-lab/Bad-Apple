@@ -8,16 +8,15 @@ Play the video in the console as a character drawing..
 
 ![GIF](./play.gif)
 
-|   | OS      | Load Mode | Decoder | Support   | Bottleneck     |
-| - | -       | -         | -       | -         | -              |
-| 0 | Windows | real-time | FFmpeg  | 720p30Hz  | decoding speed |
-| 1 | Linnux  | real-time | FFmpeg  | 720p30Hz  | decoding speed |
-| 2 | Windows | preloaded | FFmpeg  | 1080p30Hz | IO             |
-| 3 | Linux   | preloaded | FFmpeg  | 1080p30Hz | IO             |
-| 4 | Windows | real-time | OpenCV  | 360p15Hz  | decoding speed |
-| 5 | Linnux  | real-time | OpenCV  |           | decoding speed |
-| 6 | Windows | preloaded | OpenCV  | 1080p30Hz | IO             |
-| 7 | Linux   | preloaded | OpenCV  | 1080p30Hz | IO             |
+The real-time version supports up to **720p30Hz**, the bottleneck is the encoding and decoding speed.
+The preloaded version supports up to **1080p30Hz**, and the bottleneck is IO.
+
+|   | OS      | Load Mode | Decoder | Support   |
+| - | -       | -         | -       | -         |
+| 0 | Windows | real-time | FFmpeg  | 720p30Hz  |
+| 1 | Linux   | real-time | FFmpeg  | 720p30Hz  |
+| 2 | Windows | real-time | OpenCV  | 360p15Hz  |
+| 3 | Linux   | real-time | OpenCV  | 360p15Hz  |
 
 
 ### Help
@@ -26,68 +25,15 @@ Play the video in the console as a character drawing..
 usage: badapple [options] ... 
 options:
   -i, --input                   video file (string [=./badapple.mp4])
+  -o, --output                  [preloaded mode] output file (string [=])
   -a, --audio                   audio file (string [=])
   -m, --map                     font data file (string [=])
-  -s, --scale                   width:height (string [=76:54])       
-  -r, --rate                    set frame rate (double [=10])        
+  -s, --scale                   width:height (string [=76:54])
+  -r, --rate                    set frame rate (double [=10])
       --contrast-enhancement    contrast enhancement
       --play-audio              play audio with ffplay
   -?, --help                    print this message
 ```
-
-### To do
-
-OpenCV Version for Windows
-
-Add preload function to the command line tool
-
-Installer
-
-### Dependencies
-
-#### Preprocessing (fonts)
-
-CPP and Python3.
-Python module Pillow.
-
-```sh
-pip install Pillow
-```
-
-#### Compile
-
-Usually, as long as you can compile the CPP.
-
-#### Run
-
-`ffmpeg` (Include `ffmpeg` `ffprobe` `ffplay`).
-
-##### Windows
-
-[FFmpeg](https://github.com/BtbN/FFmpeg-Builds/releases/tag/latest)
-
-`libstdc++-6.dll` `libgcc_s_seh-1.dll` `libwinpthread-1` (C++ compile dependencies)
-
-##### Ubuntu / Debian
-
-```sh
-sudo apt update
-sudo apt install ffmpeg
-```
-
-##### CentOS / RedHat
-
-```sh
-sudo yum update
-sudo yum install ffmpeg
-```
-
-##### Arch Linux
-
-```sh
-sudo pacman -Syu ffmpeg
-```
-
 
 ### Clone
 
@@ -95,20 +41,124 @@ sudo pacman -Syu ffmpeg
 git clone --recurse-submodules --remote-submodule git@github.com:userElaina/Bad-Apple.git
 ```
 
+### How to use
 
-### Compile and Run
+**[Fonts Pre-processing](#fonts-pre-processing)**
 
-##### Windows
+**[Windows-FFmpeg](#windows-ffmpeg)**
+**[Windows-OpenCV](#windows-opencv)**
+
+**[Linux-FFmpeg](#linux-ffmpeg)**
+**[Linux-OpenCV](#linux-opencv)**
+
+### To do
+
+Add preload function to the command line tool
+
+How to build OpenCV with MinGW-W64
+
+Installer
+
+
+#### Fonts Pre-processing
+
+##### Dependencies
 
 ```sh
-clang++ 'badapple.cpp' -o 'badapple.exe' -w -g -O2 -static-libgcc --target=x86_64-w64-mingw -std=c++20
+pip install Pillow
+```
+
+##### Compile and Run
+
+Usually, as long as you can compile the CPP.
+
+#### Windows-FFmpeg
+
+##### Dependencies
+
+[FFmpeg](https://github.com/BtbN/FFmpeg-Builds/releases/tag/latest)
+(Include `ffmpeg` `ffprobe` `ffplay`)
+
+##### Compile and Run
+
+```sh
+clang++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc --target=x86_64-w64-mingw -std=c++2a
 ./badapple
 ```
 
-##### Linux
+or
 
 ```sh
-g++ ./badapple.cpp -o badapple.out
+g++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc -std=c++2a
+./badapple
+```
+
+#### Windows-OpenCV
+
+##### Dependencies
+
+[OpenCV](https://opencv.org/)
+
+##### Compile and Run
+
+```sh
+clang++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O2 -static-libgcc --target=x86_64-w64-mingw
+./badapple
+```
+
+or
+
+```sh
+g++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O2 -static-libgcc
+./badapple
+```
+
+### Linux-FFmpeg
+
+#### Compile
+
+##### Dependencies
+
+Use your package manager to install g++ and FFmpeg, like
+
+```sh
+sudo apt update
+sudo apt install upgrade g++ ffmpeg
+```
+
+```sh
+sudo pacman -Syu g++ ffmpeg
+```
+
+##### Compile and Run
+
+```sh
+g++ "badapple.cpp" -o "badapple.out"
+chmod +x ./badapple.out
+./badapple.out
+```
+
+
+#### Linux-OpenCV
+
+##### Dependencies
+
+Use your package manager to install g++ and OpenCV (and dependencies if need), like
+
+```sh
+sudo apt update
+sudo apt install upgrade g++ libopencv-dev
+```
+
+```sh
+sudo pacman -Syu g++ opencv vtk hdf5
+```
+
+##### Compile and Run
+
+```sh
+g++ "badapple.cpp" -o "badapple.out" `pkg-config --cflags --libs opencv4`
+chmod +x ./badapple.out
 ./badapple.out
 ```
 

@@ -1,13 +1,14 @@
 #pragma once
 
 #if defined(__WINDOWS_) || defined(_WIN32)
+#include <Windows.h>
 #else
 #include <unistd.h>
 #endif
 
 inline void second_sleep(int x) {
 #if defined(__WINDOWS_) || defined(_WIN32)
-    _sleep(x * 1000);
+    Sleep(x * 1000);
 #else
     sleep(x);
 #endif

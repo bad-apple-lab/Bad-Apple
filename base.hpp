@@ -1,8 +1,10 @@
 #pragma once
 
-#define DEBUG true
-
 #include <iostream>
+#include <cstring>
+#include <ctime>
+
+#include "winux.hpp"
 #include "consola_0_0ff.h"
 
 #define LL long long

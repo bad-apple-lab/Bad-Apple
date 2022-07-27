@@ -1,3 +1,7 @@
+#define DEBUG
+// #define DECODE_FFMPEG
+#define DECODE_OPENCV
+
 #include "cmdline/cmdline.h"
 #include "badapple.hpp"
 

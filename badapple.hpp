@@ -1,8 +1,12 @@
 #pragma once
 
-#include <ctime>
-
+#ifdef DECODE_FFMPEG
 #include "decode_ffmpeg.hpp"
+#else
+#ifdef DECODE_OPENCV
+#include "decode_opencv.hpp"
+#endif
+#endif
 
 inline void ffplaya(std::string audio) {
     std::string cmd = "ffplay -v quiet -nodisp -autoexit -hide_banner \"" + audio + "\"";
@@ -56,14 +60,20 @@ inline int play(
     clock_t t0, t1;
 
     if (!preload) {
-        printf("BEGINNING...");
+#ifdef DEBUG
+        printf("BEGINNING... [debug]\n");
         fflush(stdout);
-        if (DEBUG) second_sleep(1);
-        printf("\x1b[256F\x1b[0J");
+        second_sleep(3);
+#else
+        printf("BEGINNING...\n");
+        fflush(stdout);
+        second_sleep(1);
+#endif
         if (audio.size())
             ffplaya(audio);
         else if (play_audio)
             ffplaya(video);
+        printf("\x1b[256F\x1b[0J");
         t0 = clock();
     }
 
@@ -78,12 +88,14 @@ inline int play(
         if (i % mo) continue;
 
         decode(buffer, map, contrast_enhancement);
-        for(int _=0;_<=print_size;_++){
-            if(buffer[_]==10||(buffer[_]<=126&&buffer[_]>=32))continue;
-            printf("[%d]",buffer[_]);
+#ifdef DEBUG
+        for (int _ = 0; _ <= print_size; _++) {
+            if (buffer[_] == 10 || (buffer[_] <= 126 && buffer[_] >= 32)) continue;
+            printf("[%d:%d]", _, buffer[_]);
             throws("WTF");
             exit(0);
         }
+#endif
 
         if (preload) {
             fwrite(buffer, 1, print_size + 1, fp);

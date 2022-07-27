@@ -1,14 +1,12 @@
 #pragma once
 
-#include <cstring>
-
 #include "base.hpp"
-#include "winux.hpp"
 
 namespace decode_ffmpeg {
 
 const int BUFFER_SIZE = 1 << 8;
 const int STDOUT_SIZE = 1 << 20;
+
 inline int exec_r(const char *cmd, char *result) {
     FILE *p = r_popen(cmd);
 
@@ -33,7 +31,6 @@ std::string video;
 FILE *pipe;
 int x, y, xy;
 B *f;
-
 }  // namespace decode_ffmpeg
 
 inline void set_video(std::string video, int x, int y) {
@@ -130,14 +127,14 @@ inline int ready_to_read() {
 }
 
 inline int read_a_frame() {
-    const int xy = decode_ffmpeg::xy;
+    const int &xy = decode_ffmpeg::xy;
     return xy ^ fread(decode_ffmpeg::f, 1, xy, decode_ffmpeg::pipe);
 }
 
 inline void decode(char *buffer, Font *map, int contrast_enhancement) {
-    const int x = decode_ffmpeg::x;
-    const int y = decode_ffmpeg::y;
-    const int xy = decode_ffmpeg::xy;
+    const int &x = decode_ffmpeg::x;
+    const int &y = decode_ffmpeg::y;
+    const int &xy = decode_ffmpeg::xy;
     B *f = decode_ffmpeg::f;
 
     int max_pixel = -1, min_pixel = 256;
