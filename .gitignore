@@ -24,6 +24,6 @@
 *.bmp
 
 archive/
-dependencies/
+# dependencies/
 */temp/
 tempCodeRunnerFile.cpp
