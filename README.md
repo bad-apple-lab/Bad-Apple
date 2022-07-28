@@ -28,14 +28,14 @@ Automatically enter preload-replay mode when the input file extension is `.badap
 usage: badapple [options] ... 
 options:
   -i, --input                   video file (string [=./badapple.mp4])
-  -o, --output                  [preloaded mode] output file (string [=])
+  -o, --output                  [preload] output file (string [=])
   -a, --audio                   audio file (string [=])
   -m, --map                     font data file (string [=])
   -s, --scale                   width:height (string [=76:54])
   -r, --rate                    frame rate (double [=10])
       --not-clear               don't clear screen (using ANSI) before print a frame
       --contrast-enhancement    contrast Enhancement
-      --preload                 [preload mode]
+      --preload                 [preload]
       --play-audio              play audio with ffplay
   -?, --help                    print this message
 ```
@@ -46,6 +46,14 @@ options:
 git clone --recurse-submodules --remote-submodule git@github.com:userElaina/Bad-Apple.git
 ```
 
+### To do
+
+How to build OpenCV with MinGW-W64
+
+### License
+
+The code is available under the [MIT license](./LICENSE).
+
 ### How to use
 
 **[Fonts Pre-processing](#fonts-pre-processing)**
@@ -55,10 +63,6 @@ git clone --recurse-submodules --remote-submodule git@github.com:userElaina/Bad-
 
 **[Linux-FFmpeg](#linux-ffmpeg)**
 **[Linux-OpenCV](#linux-opencv)**
-
-### To do
-
-How to build OpenCV with MinGW-W64
 
 #### Fonts Pre-processing
 

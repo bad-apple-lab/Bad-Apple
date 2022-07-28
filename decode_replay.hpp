@@ -2,7 +2,7 @@
 
 #include "base.hpp"
 
-namespace decode_preload {
+namespace decode_replay {
 FILE* fp;
 inline void pt(int c) {
     fputc(c, fp);
@@ -26,10 +26,10 @@ inline int r() {
     }
     return ans;
 }
-}  // namespace decode_preload
+}  // namespace decode_replay
 
 inline void compress(int x, int y, int clk, FILE* _fp) {
-    using namespace decode_preload;
+    using namespace decode_replay;
     fp = _fp;
     w(x);
     pt(32);
@@ -41,12 +41,12 @@ inline void compress(int x, int y, int clk, FILE* _fp) {
     pt(10);
 }
 
-inline int play_preload(
+inline int replay(
     std::string video,
-    std::string audio,  // default use video
+    std::string audio,
     int not_clear = 0,
     int play_audio = 0) {
-    using namespace decode_preload;
+    using namespace decode_replay;
 
     fp = fopen(video.c_str(), "r");
 

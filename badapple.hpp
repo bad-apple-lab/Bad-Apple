@@ -1,6 +1,6 @@
 #pragma once
 
-#include "decode_preload.hpp"
+#include "decode_replay.hpp"
 
 #ifdef DECODE_FFMPEG
 #include "decode_ffmpeg.hpp"
@@ -51,7 +51,7 @@ inline int play(
     }
 
     if(endswith(video,".badapple")){
-        return play_preload(video,audio,not_clear,play_audio);
+        return replay(video,audio,not_clear,play_audio);
     }
 
     Font *map = new Font(font);
