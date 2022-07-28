@@ -14,49 +14,49 @@ int x, y, xy;
 
 }  // namespace decode_opencv
 
-inline void set_video(std::string video, int x, int y) {
-    decode_opencv::video = video;
-    decode_opencv::x = x;
-    decode_opencv::y = y;
-    decode_opencv::xy = x * y;
+inline void set_video(std::string _video, int _x, int _y) {
+    using namespace decode_opencv;
+    video = _video;
+    x = _x;
+    y = _y;
+    xy = x * y;
 }
 
 inline VideoProperties *analysis_video() {
-    cv::VideoCapture &cap = decode_opencv::capture;
-    cap.open(decode_opencv::video);
-    if (!cap.isOpened()) {
+    using namespace decode_opencv;
+
+    capture.open(video);
+    if (!capture.isOpened()) {
         throws("Failed to read video.");
         return nullptr;
     }
 
     VideoProperties *vp = new VideoProperties();
 
-    vp->width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
-    vp->height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
-    vp->nb_frames = cap.get(cv::CAP_PROP_FRAME_COUNT);
-    vp->rate = cap.get(cv::CAP_PROP_FPS);
+    vp->width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
+    vp->height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
+    vp->nb_frames = capture.get(cv::CAP_PROP_FRAME_COUNT);
+    vp->rate = capture.get(cv::CAP_PROP_FPS);
     vp->duration = vp->nb_frames / vp->rate;
 
     return vp;
 }
 
 inline int ready_to_read() {
-    // decode_opencv::capture.set(cv::CAP_PROP_FRAME_WIDTH, decode_opencv::x);
-    // decode_opencv::capture.set(cv::CAP_PROP_FRAME_HEIGHT, decode_opencv::y);
+    // using namespace decode_opencv;
+    // capture.set(cv::CAP_PROP_FRAME_WIDTH, x);
+    // capture.set(cv::CAP_PROP_FRAME_HEIGHT, y);
     return 0;
 }
 
 inline int read_a_frame() {
-    cv::Mat &frame = decode_opencv::frame;
-    decode_opencv::capture >> frame;
+    using namespace decode_opencv;
+    capture >> frame;
     return frame.empty();
 }
 
 inline void decode(char *buffer, Font *map, int contrast_enhancement) {
-    const int &x = decode_opencv::x;
-    const int &y = decode_opencv::y;
-    const int &xy = decode_opencv::xy;
-    cv::Mat &frame = decode_opencv::frame;
+    using namespace decode_opencv;
 
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::resize(frame, frame, cv::Size(x, y), 0, 0, cv::INTER_CUBIC);
@@ -98,5 +98,6 @@ inline void decode(char *buffer, Font *map, int contrast_enhancement) {
 }
 
 inline void cls() {
+    // using namespace decode_opencv;
     return;
 }

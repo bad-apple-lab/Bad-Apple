@@ -16,6 +16,8 @@
 *.rmvb
 *.ts
 
+*.badapple
+
 # image
 *.png
 *.jpg
@@ -24,6 +26,5 @@
 *.bmp
 
 archive/
-# dependencies/
 */temp/
 tempCodeRunnerFile.cpp

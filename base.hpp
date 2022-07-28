@@ -8,13 +8,19 @@
 #include "consola_0_0ff.h"
 
 #define LL long long
-#define ULL unsigned long long
 #define B unsigned char
-#define pt putchar
-#define gt getchar
+
+inline int endswith(std::string s,std::string sub){
+    return s.rfind(sub)==(s.length()-sub.length())?1:0;
+}
 
 inline void throws(const char *s) {
     throw std::runtime_error(std::string(s));
+}
+
+inline void playa(std::string audio) {
+    std::string cmd = "ffplay -v quiet -nodisp -autoexit -hide_banner \"" + audio + "\"";
+    system(background_process(cmd).c_str());
 }
 
 class VideoProperties {
