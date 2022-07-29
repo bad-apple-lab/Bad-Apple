@@ -60,11 +60,11 @@ inline int replay(
     char* buffer = (char*)malloc(print_size + 2);
     clock_t t0, t1;
 #ifdef DEBUG
-    printf("BEGINNING... [debug]\n");
+    printf("BEGINNING... [replay] [debug]\n");
     fflush(stdout);
     second_sleep(3);
 #else
-    printf("BEGINNING...\n");
+    printf("BEGINNING... [replay]\n");
     fflush(stdout);
     second_sleep(1);
 #endif

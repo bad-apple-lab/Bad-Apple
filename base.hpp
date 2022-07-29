@@ -10,8 +10,8 @@
 #define LL long long
 #define B unsigned char
 
-inline int endswith(std::string s,std::string sub){
-    return s.rfind(sub)==(s.length()-sub.length())?1:0;
+inline int endswith(std::string s, std::string sub) {
+    return s.rfind(sub) < s.length() && s.rfind(sub) == (s.length() - sub.length());
 }
 
 inline void throws(const char *s) {

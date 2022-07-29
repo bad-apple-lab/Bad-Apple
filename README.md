@@ -8,16 +8,9 @@ Play the video in the console as a character drawing..
 
 ![GIF](./play.gif)
 
-The real-time version supports up to **720p30Hz**, the bottleneck is the encoding and decoding speed.
-The preloaded version supports up to **1080p30Hz**, and the bottleneck is IO.
+### Performance
 
-|   | OS      | Load Mode | Decoder | Support   |
-| - | -       | -         | -       | -         |
-| 0 | Windows | real-time | FFmpeg  | 720p30Hz  |
-| 1 | Linux   | real-time | FFmpeg  | 720p30Hz  |
-| 2 | Windows | real-time | OpenCV  | 360p15Hz  |
-| 3 | Linux   | real-time | OpenCV  | 360p15Hz  |
-
+The real-time mode's bottleneck is the decoding speed, and the preloaded-replay mode's is IO.
 
 ### Help
 
@@ -31,8 +24,8 @@ options:
   -o, --output                  [preload] output file (string [=])
   -a, --audio                   audio file (string [=])
   -m, --map                     font data file (string [=])
-  -s, --scale                   width:height (string [=76:54])
-  -r, --rate                    frame rate (double [=10])
+  -s, --scale                   width:height (string [=72:54])
+  -r, --rate                    frame rate (double [=1024])
       --not-clear               don't clear screen (using ANSI) before print a frame
       --contrast-enhancement    contrast Enhancement
       --preload                 [preload]
@@ -48,9 +41,7 @@ git clone --recurse-submodules --remote-submodule git@github.com:userElaina/Bad-
 
 ### To do
 
-How to build OpenCV with MinGW-W64
-
-Test
+Performance Test
 
 ### License
 
@@ -77,7 +68,7 @@ pip install Pillow
 ##### Interpret and Run
 
 ```sh
-python -u "font.py"
+python -u "font/font.py"
 ```
 
 #### Windows-FFmpeg
@@ -90,14 +81,14 @@ python -u "font.py"
 ##### Compile and Run
 
 ```sh
-clang++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc --target=x86_64-w64-mingw -std=c++2a
+clang++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc --target=x86_64-w64-mingw
 ./badapple
 ```
 
 or
 
 ```sh
-g++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc -std=c++2a
+g++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc
 ./badapple
 ```
 
@@ -106,6 +97,8 @@ g++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc -std=c++2a
 ##### Dependencies
 
 [OpenCV](https://opencv.org/)
+
+You may need to [compile it yourself](https://github.com/userElaina/OpenCV-460-MinGW-W64-Build).
 
 ##### Compile and Run
 
