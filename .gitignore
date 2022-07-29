@@ -28,3 +28,5 @@
 archive/
 */temp/
 tempCodeRunnerFile.cpp
+
+!dependencies/**
