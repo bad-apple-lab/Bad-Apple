@@ -1,6 +1,6 @@
 #pragma once
 
-char default_map[0x100][0x101]={
+char map65536[0x100][0x101]={
     "                       ........................-------------------,,,,,,,,,,,,,,,,_______________________________________________________________uuuuuuuuuuuuuuuaaaaaaayyyyyyyyyywwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwgggggggggggggggggggggg",
     "                       ........................-------------------,,,,,,,,,,,,,,,,______________________________________________________________uuuuuuuuuuuuuuuuaaaaaaayyyyyyyyyywwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwgggggggggggggggggggggg",
     "                       ........................-------------------,,,,,,,,,,,,,,,,______________________________++++++++++++++++++++++++++++++++uuuuuuuuuuuuuuuuaaaaaaayyyyyyyyyywwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwgggggggggggggggggggggg",

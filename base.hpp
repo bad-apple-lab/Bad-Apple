@@ -5,7 +5,7 @@
 #include <ctime>
 
 #include "winux.hpp"
-#include "consola_0_0ff.h"
+#include "font/consola_ascii_0_ff.h"
 
 #define LL long long
 #define B unsigned char
@@ -45,7 +45,7 @@ private:
     }
     inline void init() {
         for (auto i = 0; i < MAXCOL; i++) {
-            std::memcpy(o[i], default_map[i], sizeof(default_map[i]));
+            std::memcpy(o[i], map65536[i], sizeof(map65536[i]));
         }
     }
     inline void init(const char *s) {

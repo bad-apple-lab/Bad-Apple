@@ -50,6 +50,8 @@ git clone --recurse-submodules --remote-submodule git@github.com:userElaina/Bad-
 
 How to build OpenCV with MinGW-W64
 
+Test
+
 ### License
 
 The code is available under the [MIT license](./LICENSE).
@@ -72,9 +74,11 @@ The code is available under the [MIT license](./LICENSE).
 pip install Pillow
 ```
 
-##### Compile and Run
+##### Interpret and Run
 
-Usually, as long as you can compile the CPP.
+```sh
+python -u "font.py"
+```
 
 #### Windows-FFmpeg
 
