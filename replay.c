@@ -29,8 +29,6 @@ inline int r() {
 }
 
 int main(int argc, char** argv) {
-    int not_clear = 1;
-
     fp = fopen("badapple.mp4.badapple", "r");
 
     const int x = r();
@@ -45,7 +43,7 @@ int main(int argc, char** argv) {
     printf("BEGINNING... [replay]\n");
     fflush(stdout);
     second_sleep(1);
-    printf(not_clear ? "\n" : "\x1b[256F\x1b[0J");
+    printf("\n");
     t0 = clock();
 
     int i;
@@ -57,8 +55,7 @@ int main(int argc, char** argv) {
             }
             break;
         }
-        printf(not_clear ? "\n" : "\x1b[256F");
-        fwrite(buffer, 1, print_size, stdout);
+        fwrite(buffer, 1, print_size + 1, stdout);
         fflush(stdout);
         t1 = clock();
         while (t1 - t0 < clk) {
