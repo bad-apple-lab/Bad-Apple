@@ -62,7 +62,7 @@ The code is available under the [MIT license](./LICENSE).
 ##### Dependencies
 
 ```sh
-pip install Pillow
+pip install pillow
 ```
 
 ##### Interpret and Run
@@ -81,14 +81,14 @@ python -u "font/font.py"
 ##### Compile and Run
 
 ```sh
-clang++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc --target=x86_64-w64-mingw
+clang++ "badapple.cpp" -o "badapple.exe" -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
 ./badapple
 ```
 
 or
 
 ```sh
-g++ "badapple.cpp" -o "badapple.exe" -w -g -O2 -static-libgcc
+g++ "badapple.cpp" -o "badapple.exe" -w -g -O3 -static-libgcc
 ./badapple
 ```
 
@@ -103,14 +103,14 @@ You may need to [compile it yourself](https://github.com/userElaina/OpenCV-460-M
 ##### Compile and Run
 
 ```sh
-clang++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O2 -static-libgcc --target=x86_64-w64-mingw
+clang++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
 ./badapple
 ```
 
 or
 
 ```sh
-g++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O2 -static-libgcc
+g++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O3 -static-libgcc
 ./badapple
 ```
 
@@ -120,21 +120,21 @@ g++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPEN
 
 ##### Dependencies
 
-Use your package manager to install g++ and FFmpeg, like
+Use your package manager to install or upgrade gcc, g++, FFmpeg and dependencies if need, like
 
 ```sh
 sudo apt update
-sudo apt install upgrade g++ ffmpeg
+sudo apt install upgrade gcc g++ ffmpeg
 ```
 
 ```sh
-sudo pacman -Syu g++ ffmpeg
+sudo pacman -Syu gcc ffmpeg
 ```
 
 ##### Compile and Run
 
 ```sh
-g++ "badapple.cpp" -o "badapple.out"
+g++ "badapple.cpp" -o "badapple.out" -w -g -O3 -static-libgcc
 chmod +x ./badapple.out
 ./badapple.out
 ```
@@ -143,21 +143,27 @@ chmod +x ./badapple.out
 
 ##### Dependencies
 
-Use your package manager to install g++ and OpenCV (and dependencies if need), like
+Use your package manager to install or upgrade gcc, g++, OpenCV and dependencies if need, like
 
 ```sh
 sudo apt update
-sudo apt install upgrade g++ libopencv-dev
+sudo apt install upgrade gcc g++ libopencv-dev
 ```
 
 ```sh
-sudo pacman -Syu g++ opencv vtk hdf5
+sudo pacman -Syu gcc opencv vtk hdf5 pkgconf
 ```
 
 ##### Compile and Run
 
 ```sh
-g++ "badapple.cpp" -o "badapple.out" `pkg-config --cflags --libs opencv4`
+g++ "badapple.cpp" -o "badapple.out" -w -g -O3 -static-libgcc `pkg-config --cflags --libs opencv4`
+chmod +x ./badapple.out
+./badapple.out
+```
+
+```sh
+g++ "badapple.cpp" -o "badapple.out" -w -g -O3 -static-libgcc `pkgconf --cflags --libs opencv4`
 chmod +x ./badapple.out
 ./badapple.out
 ```
