@@ -36,7 +36,7 @@ options:
 ### Clone
 
 ```sh
-git clone --recurse-submodules --remote-submodule git@github.com:userElaina/Bad-Apple.git
+git clone --recurse-submodules --remote-submodule https://github.com/userElaina/Bad-Apple.git
 ```
 
 ### To do
