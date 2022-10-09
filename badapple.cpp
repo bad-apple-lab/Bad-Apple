@@ -6,8 +6,22 @@
 #include "badapple.hpp"
 
 int main(int argc, char** argv) {
+    std::string version = "v2.0.1";
+    std::string footer = "\n  (BadApple-";
+
+#ifdef DECODE_FFMPEG
+    footer += "FFmpeg";
+#else
+#ifdef DECODE_OPENCV
+    footer += "OpenCV";
+#endif
+#endif
+
+    footer += "-" + version + "-" + short_os_name() + "64)";
+
     cmdline::parser a;
     a.set_program_name("badapple");
+    a.footer(footer.c_str());
     a.add<std::string>("input", 'i', "video file", false, "./badapple.mp4");
     a.add<std::string>("output", 'o', "[preload] output file", false, "");
     a.add<std::string>("audio", 'a', "audio file", false, "");

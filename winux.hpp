@@ -6,6 +6,14 @@
 #include <unistd.h>
 #endif
 
+inline std::string short_os_name(){
+#if defined(__WINDOWS_) || defined(_WIN32)
+    return "win";
+#else
+    return "linux";
+#endif
+}
+
 inline void second_sleep(int x) {
 #if defined(__WINDOWS_) || defined(_WIN32)
     Sleep(x * 1000);
