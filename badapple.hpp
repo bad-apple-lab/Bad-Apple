@@ -50,8 +50,8 @@ inline int play(
         audio = video;
     }
 
-    if(endswith(video,".badapple")){
-        return replay(video,audio,not_clear,play_audio);
+    if (endswith(video, ".badapple")) {
+        return replay(video, audio, not_clear, play_audio);
     }
 
     Font *map = new Font(font);
@@ -70,7 +70,7 @@ inline int play(
     if (!mo) {
         mo = 1;
     }
-    const LL clk = mo / vp->rate * CLOCKS_PER_SEC;
+    const LL clk = mo * 1000000LL / vp->rate;
 
     printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs\n", vp->width, vp->height, vp->rate, x, y, vp->rate / mo, vp->duration);
     // [1444:1080 29.97Hz] -> [76:54 9.99Hz] 232.065s
@@ -84,7 +84,8 @@ inline int play(
         return 1;
     }
 
-    clock_t t0, t1;
+    auto t0 = std::chrono::steady_clock::now();
+    auto t1 = std::chrono::steady_clock::now();
 
     if (preload) {
         fp = fopen(output.c_str(), "w");
@@ -94,7 +95,7 @@ inline int play(
             getchar();
             return 1;
         }
-        compress(x,y,clk,fp);
+        compress(x, y, clk, fp);
     } else {
 #ifdef DEBUG
         printf("BEGINNING... [debug]\n");
@@ -109,8 +110,9 @@ inline int play(
             playa(audio);
         else if (play_audio)
             playa(video);
-        printf(not_clear?"\n":"\x1b[256F\x1b[0J");
-        t0 = clock();
+        printf(not_clear ? "\n" : "\x1b[256F\x1b[0J");
+        fflush(stdout);
+        t0 = std::chrono::steady_clock::now();
     }
 
     for (auto i = 0;; i++) {
@@ -136,13 +138,16 @@ inline int play(
         if (preload) {
             fwrite(buffer, 1, print_size + 1, fp);
         } else {
-            printf(not_clear?"\n":"\x1b[256F");
+            printf(not_clear ? "\n" : "\x1b[256F");
             fwrite(buffer, 1, print_size, stdout);
+#ifdef DEBUG
+            printf("%d\n", int(i * mo / vp->rate + 0.5));
+#endif
             fflush(stdout);
 
-            t1 = clock();
-            while (t1 - t0 < clk) {
-                t1 = clock();
+            t1 = std::chrono::steady_clock::now();
+            while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
+                t1 = std::chrono::steady_clock::now();
             }
             t0 = t1;
         }

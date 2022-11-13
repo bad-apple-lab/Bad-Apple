@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
+#include <chrono>
 
 #include "winux.hpp"
 #include "font/consola_ascii_0_ff.h"

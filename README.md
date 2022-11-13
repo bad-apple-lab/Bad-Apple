@@ -49,6 +49,8 @@ The code is available under the [MIT license](./LICENSE).
 
 ### How to use
 
+*Only Tested on x86_64
+
 **[Fonts Pre-processing](#fonts-pre-processing)**
 
 **[Windows-FFmpeg](#windows-ffmpeg)**
@@ -81,15 +83,15 @@ python -u "font/font.py"
 ##### Compile and Run
 
 ```sh
-clang++ "badapple.cpp" -o "badapple.exe" -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
-./badapple
+clang++ "badapple.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
+./badapple-ffmpeg-win
 ```
 
 or
 
 ```sh
-g++ "badapple.cpp" -o "badapple.exe" -w -g -O3 -static-libgcc
-./badapple
+g++ "badapple.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc
+./badapple-ffmpeg-win
 ```
 
 #### Windows-OpenCV
@@ -103,15 +105,15 @@ You may need to [compile it yourself](https://github.com/userElaina/OpenCV-460-M
 ##### Compile and Run
 
 ```sh
-clang++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
-./badapple
+clang++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
+./badapple-opencv-win
 ```
 
 or
 
 ```sh
-g++ "badapple.cpp" -o "badapple.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O3 -static-libgcc
-./badapple
+g++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O3 -static-libgcc
+./badapple-opencv-win
 ```
 
 ### Linux-FFmpeg
@@ -134,9 +136,8 @@ sudo pacman -Syu gcc ffmpeg
 ##### Compile and Run
 
 ```sh
-g++ "badapple.cpp" -o "badapple.out" -w -g -O3 -static-libgcc
-chmod +x ./badapple.out
-./badapple.out
+g++ "badapple.cpp" -o "badapple-ffmpeg-linux.out" -w -g -O3 -static-libgcc
+./badapple-ffmpeg-linux.out
 ```
 
 #### Linux-OpenCV
@@ -157,13 +158,11 @@ sudo pacman -Syu gcc opencv vtk hdf5 pkgconf
 ##### Compile and Run
 
 ```sh
-g++ "badapple.cpp" -o "badapple.out" -w -g -O3 -static-libgcc `pkg-config --cflags --libs opencv4`
-chmod +x ./badapple.out
-./badapple.out
+g++ "badapple.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkg-config --cflags --libs opencv4`
+./badapple-opencv-linux.out
 ```
 
 ```sh
-g++ "badapple.cpp" -o "badapple.out" -w -g -O3 -static-libgcc `pkgconf --cflags --libs opencv4`
-chmod +x ./badapple.out
-./badapple.out
+g++ "badapple.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkgconf --cflags --libs opencv4`
+./badapple-opencv-linux.out
 ```

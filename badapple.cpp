@@ -1,5 +1,5 @@
-#define DEBUG
-#define DECODE_FFMPEG
+// #define DEBUG
+// #define DECODE_FFMPEG
 #define DECODE_OPENCV
 
 #include "cmdline/cmdline.h"
@@ -17,7 +17,11 @@ int main(int argc, char** argv) {
 #endif
 #endif
 
-    footer += "-" + version + "-" + short_os_name() + "64)";
+    footer += "-" + short_os_name() + "-" + short_isa_name() + "-" + version + ")";
+
+#ifdef DEBUG
+    footer += " [debug]";
+#endif
 
     cmdline::parser a;
     a.set_program_name("badapple");
