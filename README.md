@@ -1,16 +1,16 @@
 ## Bad Apple!!
 
-Play the video in the console as a character drawing..
+Play the video in the console as ASCII art. 
 ~~You can watch anime by it while you are connected by **SSH**.~~
 
-以字符画的形式在控制台中播放视频.
+以 ASCII art 的形式在控制台中播放视频. 
 ~~你甚至可以利用它在 **SSH** 中看番.~~
 
 ![GIF](./play.gif)
 
 ### Performance
 
-The real-time mode's bottleneck is the decoding speed, and the preloaded-replay mode's is IO.
+1080p60Hz on modern high-performance PCs.
 
 ### Help
 
@@ -19,6 +19,7 @@ Automatically enter preload-replay mode when the input file extension is `.badap
 
 ```markdown
 usage: badapple [options] ... 
+  (BadApple-ffmpeg_or_opencv-os-isa-v2.0.1)
 options:
   -i, --input                   video file (string [=./badapple.mp4])
   -o, --output                  [preload] output file (string [=])
@@ -41,7 +42,7 @@ git clone --recurse-submodules --remote-submodule https://github.com/userElaina/
 
 ### To do
 
-Performance Test
+Automatic parameter setting through information from video and hardware.
 
 ### License
 
@@ -49,7 +50,7 @@ The code is available under the [MIT license](./LICENSE).
 
 ### How to use
 
-*Only Tested on x86_64
+*Only tested on x86_64
 
 **[Fonts Pre-processing](#fonts-pre-processing)**
 
@@ -122,7 +123,7 @@ g++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV_PATH\include" -I
 
 ##### Dependencies
 
-Use your package manager to install or upgrade gcc, g++, FFmpeg and dependencies if need, like
+Use your package manager to install or upgrade C++ compiler, FFmpeg and dependencies if need, like
 
 ```sh
 sudo apt update
@@ -144,7 +145,7 @@ g++ "badapple.cpp" -o "badapple-ffmpeg-linux.out" -w -g -O3 -static-libgcc
 
 ##### Dependencies
 
-Use your package manager to install or upgrade gcc, g++, OpenCV and dependencies if need, like
+Use your package manager to install or upgrade C++ compiler, OpenCV and dependencies if need, like
 
 ```sh
 sudo apt update
