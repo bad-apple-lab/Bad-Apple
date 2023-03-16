@@ -8,7 +8,7 @@ x_ascii = 15
 y_ascii = 32
 fout_size = 26
 offset = 5
-f_font = './consola.ttf'
+f_font = 'font/consola.ttf'
 char_type = 'ascii'
 # cmd: offset=5
 
@@ -17,6 +17,11 @@ x_ascii *= dpi
 y_ascii *= dpi >> 1
 fout_size *= dpi
 offset *= dpi
+f_font = os.path.abspath(f_font)
+
+if not os.path.isfile(f_font):
+    raise Exception('FileNotFoundError: f_font')
+
 fnt = ImageFont.truetype(f_font, fout_size)
 
 list_ascii = sorted(string.printable[:-5])
@@ -24,7 +29,7 @@ list_ascii = sorted(string.printable[:-5])
 if char_type == 'ascii':
     None
 else:
-    raise Exception('Unsupported char type: %s' % char_type)
+    raise Exception('Unsupported char_type: %s' % char_type)
 
 ans_ascii = dict()
 max_ascii = 0
@@ -73,5 +78,5 @@ for i in ans_65536:
     s += '\n    "'+i.replace('\\', '\\\\').replace('"', '\\"')+'",'
 s = s[:-1]+'\n};\n'
 
-open(os.path.join(os.path.dirname(os.path.abspath(f_font)), os.path.basename(
+open(os.path.join(os.path.dirname(f_font), os.path.basename(
     f_font).rsplit('.', 1)[0]+'_'+char_type+'_0_ff.h'), 'w').write(s)

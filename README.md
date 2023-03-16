@@ -48,7 +48,7 @@ Automatic parameter setting through information from video and hardware.
 
 The code is available under the [MIT license](./LICENSE).
 
-### How to use
+### How to build
 
 *Only tested on x86_64
 
@@ -62,6 +62,8 @@ The code is available under the [MIT license](./LICENSE).
 
 #### Fonts Pre-processing
 
+If you don't want to change the font, then you don't need to use Python.
+
 ##### Dependencies
 
 ```sh
@@ -69,6 +71,14 @@ pip install pillow
 ```
 
 ##### Interpret and Run
+
+Change this line
+
+```py
+f_font = './consola.ttf'
+```
+
+to your font file path.
 
 ```sh
 python -u "font/font.py"
