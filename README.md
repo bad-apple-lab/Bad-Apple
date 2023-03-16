@@ -101,19 +101,19 @@ g++ "badapple.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc
 
 [OpenCV](https://opencv.org/)
 
-You may need to [compile it yourself](https://github.com/userElaina/OpenCV-460-MinGW-W64-Build).
+You may need to [compile it yourself](https://github.com/userElaina/OpenCV-MinGW-W64-Build).
 
 ##### Compile and Run
 
 ```sh
-clang++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
+clang++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "$Env:OPENCV470\include\opencv2" -L "$Env:OPENCV470\x64\mingw\lib" -llibopencv_world470 -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
 ./badapple-opencv-win
 ```
 
 or
 
 ```sh
-g++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV_PATH\include" -I "$Env:OPENCV_PATH\include\opencv2" -L "$Env:OPENCV_PATH\x64\mingw\lib" -llibopencv_world460 -w -g -O3 -static-libgcc
+g++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "$Env:OPENCV470\include\opencv2" -L "$Env:OPENCV470\x64\mingw\lib" -llibopencv_world470 -w -g -O3 -static-libgcc
 ./badapple-opencv-win
 ```
 
@@ -127,7 +127,7 @@ Use your package manager to install or upgrade C++ compiler, FFmpeg and dependen
 
 ```sh
 sudo apt update
-sudo apt install upgrade gcc g++ ffmpeg
+sudo apt install --upgrade gcc g++ ffmpeg
 ```
 
 ```sh
@@ -149,7 +149,7 @@ Use your package manager to install or upgrade C++ compiler, OpenCV and dependen
 
 ```sh
 sudo apt update
-sudo apt install upgrade gcc g++ libopencv-dev
+sudo apt install --upgrade gcc g++ libopencv-dev
 ```
 
 ```sh
