@@ -60,7 +60,7 @@ inline int play(
     y += y & 1;
     const int xy = x * y;
 
-    VideoProperties *vp = analysis_video(video, x, y);
+    VideoProperties *vp = analysis(video, x, y);
     if (!vp) {
         throws("Failed to analysis video.");
         return 1;
@@ -78,8 +78,9 @@ inline int play(
     const int print_size = (x + 1) * (y >> 1);
     B *f = (B *)malloc(xy);
     char *buffer = (char *)malloc(print_size + 2);
-    auto t0 = std::chrono::steady_clock::now();
-    auto t1 = std::chrono::steady_clock::now();
+    Timer *timer = new Timer(clk);
+    // auto t0 = std::chrono::steady_clock::now();
+    // auto t1 = std::chrono::steady_clock::now();
 
     if (ready_to_read()) {
         throws("Failed to read video.");
@@ -110,7 +111,8 @@ inline int play(
         }
         printf(not_clear ? "\n" : "\x1b[256F\x1b[0J");
         fflush(stdout);
-        t0 = std::chrono::steady_clock::now();
+        timer->bg();
+        // t0 = std::chrono::steady_clock::now();
     }
 
     for (auto i = 0;; i++) {
@@ -165,12 +167,12 @@ inline int play(
             printf(not_clear ? "\n" : "\x1b[256F");
             fwrite(buffer, 1, print_size, stdout);
             fflush(stdout);
-
-            t1 = std::chrono::steady_clock::now();
-            while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
-                t1 = std::chrono::steady_clock::now();
-            }
-            t0 = t1;
+            timer->slp();
+            // t1 = std::chrono::steady_clock::now();
+            // while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
+            //     t1 = std::chrono::steady_clock::now();
+            // }
+            // t0 = t1;
         }
     }
 

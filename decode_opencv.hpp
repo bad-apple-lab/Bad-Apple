@@ -13,7 +13,7 @@ cv::Mat frame;
 int x, y, xy;
 }  // namespace decode_opencv
 
-inline VideoProperties *analysis_video(std::string _video, int _x, int _y) {
+inline VideoProperties *analysis(std::string _video, int _x, int _y) {
     using namespace decode_opencv;
     video = _video;
     x = _x;

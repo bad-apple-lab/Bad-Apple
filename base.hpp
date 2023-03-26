@@ -24,6 +24,27 @@ inline void playa(std::string audio) {
     system(background_process(cmd).c_str());
 }
 
+class Timer {
+private:
+    std::chrono::steady_clock::time_point t0;
+
+public:
+    LL clk;
+    Timer(LL c) : clk(c) {}
+    int bg() {
+        t0 = std::chrono::steady_clock::now();
+        return 0;
+    }
+    int slp() {
+        auto t1 = std::chrono::steady_clock::now();
+        while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
+            t1 = std::chrono::steady_clock::now();
+        }
+        t0 = t1;
+        return 0;
+    }
+};
+
 class VideoProperties {
 public:
     int width, height, nb_frames = 1;

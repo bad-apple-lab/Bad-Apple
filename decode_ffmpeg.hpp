@@ -32,7 +32,7 @@ FILE *fp;
 int x, y, xy;
 }  // namespace decode_ffmpeg
 
-inline VideoProperties *analysis_video(std::string _video, int _x, int _y) {
+inline VideoProperties *analysis(std::string _video, int _x, int _y) {
     using namespace decode_ffmpeg;
     video = _video;
     x = _x;
