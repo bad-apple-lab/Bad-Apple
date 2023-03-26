@@ -31,7 +31,7 @@ options:
       --contrast_enhancement    contrast Enhancement
       --preload                 [preload]
       --play_audio              play audio with ffplay
-  -?, --help                    print this messagege
+  -?, --help                    print this message
 ```
 
 ### Clone
