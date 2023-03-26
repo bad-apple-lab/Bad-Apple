@@ -30,20 +30,14 @@ inline int exec_r(const char *cmd, char *result) {
 std::string video;
 FILE *fp;
 int x, y, xy;
-B *f;
 }  // namespace decode_ffmpeg
 
-inline void set_video(std::string _video, int _x, int _y) {
+inline VideoProperties *analysis_video(std::string _video, int _x, int _y) {
     using namespace decode_ffmpeg;
     video = _video;
     x = _x;
     y = _y;
     xy = x * y;
-    f = (B *)malloc(xy);
-}
-
-inline VideoProperties *analysis_video() {
-    using namespace decode_ffmpeg;
 
     std::string cmd = (std::string) "ffprobe -v quiet -show_streams -select_streams v \"" + video + "\"";
     // printf("%s\n", cmd.c_str());
@@ -131,38 +125,9 @@ inline int ready_to_read() {
     return 0;
 }
 
-inline int read_a_frame() {
+inline int read_a_frame(B *f) {
     using namespace decode_ffmpeg;
     return xy ^ fread(f, 1, xy, fp);
-}
-
-inline void decode(char *buffer, Font *map, int contrast_enhancement) {
-    using namespace decode_ffmpeg;
-
-    int max_pixel = -1, min_pixel = 256;
-    if (contrast_enhancement) {
-        for (auto j = 0; j < xy; j++) {
-            if (f[j] > max_pixel) max_pixel = f[j];
-            if (f[j] < min_pixel) min_pixel = f[j];
-        }
-
-        if (max_pixel ^ min_pixel) {
-            for (auto j = 0; j < xy; j++) {
-                f[j] = (f[j] - min_pixel) * 0xff / (max_pixel - min_pixel);
-            }
-        } else {
-            memset(f, max_pixel & 128 ? 0xff : 0x00, xy);
-        }
-    }
-
-    int buffer_tail = 0;
-    for (auto j = 0; j < (y >> 1); j++) {
-        for (auto k = 0; k < x; k++) {
-            buffer[buffer_tail++] = map->get(f[(j << 1) * x + k], f[(j << 1 | 1) * x + k]);
-        }
-        buffer[buffer_tail++] = 10;
-    }
-    buffer[buffer_tail++] = 10;
 }
 
 inline void cls() {

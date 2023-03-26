@@ -19,19 +19,19 @@ Automatically enter preload-replay mode when the input file extension is `.badap
 
 ```markdown
 usage: badapple [options] ... 
-  (BadApple-ffmpeg_or_opencv-os-isa-v2.0.1)
+  (BadApple-ffmpeg_or_opencv-os-isa-version)
 options:
   -i, --input                   video file (string [=./badapple.mp4])
   -o, --output                  [preload] output file (string [=])
   -a, --audio                   audio file (string [=])
-  -m, --map                     font data file (string [=])
+  -f, --font                    font data file (string [=])
   -s, --scale                   width:height (string [=72:54])
   -r, --rate                    frame rate (double [=1024])
-      --not-clear               don't clear screen (using ANSI) before print a frame
-      --contrast-enhancement    contrast Enhancement
+      --not_clear               don't clear screen (using ANSI) before print a frame
+      --contrast_enhancement    contrast Enhancement
       --preload                 [preload]
-      --play-audio              play audio with ffplay
-  -?, --help                    print this message
+      --play_audio              play audio with ffplay
+  -?, --help                    print this messagege
 ```
 
 ### Clone
@@ -75,7 +75,7 @@ pip install pillow
 Change this line
 
 ```py
-f_font = './consola.ttf'
+f_font = 'font/consola.ttf'
 ```
 
 to your font file path.
@@ -91,18 +91,16 @@ python -u "font/font.py"
 [FFmpeg](https://github.com/BtbN/FFmpeg-Builds/releases/tag/latest)
 (Include `ffmpeg` `ffprobe` `ffplay`)
 
-##### Compile and Run
+##### Compile
 
 ```sh
 clang++ "badapple.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
-./badapple-ffmpeg-win
 ```
 
 or
 
 ```sh
 g++ "badapple.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc
-./badapple-ffmpeg-win
 ```
 
 #### Windows-OpenCV
@@ -113,18 +111,16 @@ g++ "badapple.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc
 
 You may need to [compile it yourself](https://github.com/userElaina/OpenCV-MinGW-W64-Build).
 
-##### Compile and Run
+##### Compile
 
 ```sh
 clang++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "$Env:OPENCV470\include\opencv2" -L "$Env:OPENCV470\x64\mingw\lib" -llibopencv_world470 -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
-./badapple-opencv-win
 ```
 
 or
 
 ```sh
 g++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "$Env:OPENCV470\include\opencv2" -L "$Env:OPENCV470\x64\mingw\lib" -llibopencv_world470 -w -g -O3 -static-libgcc
-./badapple-opencv-win
 ```
 
 ### Linux-FFmpeg
@@ -144,11 +140,10 @@ sudo apt install --upgrade gcc g++ ffmpeg
 sudo pacman -Syu gcc ffmpeg
 ```
 
-##### Compile and Run
+##### Compile
 
 ```sh
 g++ "badapple.cpp" -o "badapple-ffmpeg-linux.out" -w -g -O3 -static-libgcc
-./badapple-ffmpeg-linux.out
 ```
 
 #### Linux-OpenCV
@@ -166,14 +161,12 @@ sudo apt install --upgrade gcc g++ libopencv-dev
 sudo pacman -Syu gcc opencv vtk hdf5 pkgconf
 ```
 
-##### Compile and Run
+##### Compile
 
 ```sh
 g++ "badapple.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkg-config --cflags --libs opencv4`
-./badapple-opencv-linux.out
 ```
 
 ```sh
 g++ "badapple.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkgconf --cflags --libs opencv4`
-./badapple-opencv-linux.out
 ```

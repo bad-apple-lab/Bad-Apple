@@ -58,7 +58,9 @@ inline int replay(
 
     const int print_size = (x + 1) * y;
     char* buffer = (char*)malloc(print_size + 2);
-    clock_t t0, t1;
+    auto t0 = std::chrono::steady_clock::now();
+    auto t1 = std::chrono::steady_clock::now();
+
 #ifdef DEBUG
     printf("BEGINNING... [replay] [debug]\n");
     fflush(stdout);
@@ -68,12 +70,12 @@ inline int replay(
     fflush(stdout);
     second_sleep(1);
 #endif
-    if (audio.length())
+    if (play_audio) {
         playa(audio);
-    else if (play_audio)
-        playa(video);
+    }
     printf(not_clear ? "\n" : "\x1b[256F\x1b[0J");
-    t0 = clock();
+    fflush(stdout);
+    t0 = std::chrono::steady_clock::now();
 
     for (auto i = 0;; i++) {
         if ((print_size + 1) ^ fread(buffer, 1, print_size + 1, fp)) {
@@ -86,9 +88,10 @@ inline int replay(
         printf(not_clear ? "\n" : "\x1b[256F");
         fwrite(buffer, 1, print_size, stdout);
         fflush(stdout);
-        t1 = clock();
-        while (t1 - t0 < clk) {
-            t1 = clock();
+
+        t1 = std::chrono::steady_clock::now();
+        while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
+            t1 = std::chrono::steady_clock::now();
         }
         t0 = t1;
     }

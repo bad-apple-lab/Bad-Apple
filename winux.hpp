@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(__WINDOWS_) || defined(_WIN32)
+#if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
 #else
 #include <unistd.h>
@@ -69,7 +69,7 @@ inline std::string short_os_name() {
 }
 
 inline void second_sleep(int x) {
-#if defined(__WINDOWS_) || defined(_WIN32)
+#if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
     Sleep(x * 1000);
 #else
     sleep(x);

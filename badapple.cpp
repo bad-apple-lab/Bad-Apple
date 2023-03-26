@@ -6,7 +6,7 @@
 #include "badapple.hpp"
 
 int main(int argc, char** argv) {
-    std::string version = "v2.0.1";
+    std::string version = "v2.1.0";
     std::string footer = "\n  (BadApple-";
 
 #ifdef DECODE_FFMPEG
@@ -29,16 +29,16 @@ int main(int argc, char** argv) {
     a.add<std::string>("input", 'i', "video file", false, "./badapple.mp4");
     a.add<std::string>("output", 'o', "[preload] output file", false, "");
     a.add<std::string>("audio", 'a', "audio file", false, "");
-    a.add<std::string>("map", 'm', "font data file", false, "");
+    a.add<std::string>("font", 'f', "font data file", false, "");
     a.add<std::string>("scale", 's', "width:height", false, "72:54");
     a.add<double>("rate", 'r', "frame rate", false, 1024.0);
-    a.add("not-clear", '\0', "don't clear screen (using ANSI) before print a frame");
-    a.add("contrast-enhancement", '\0', "contrast Enhancement");
+    a.add("not_clear", '\0', "don't clear screen (using ANSI) before print a frame");
+    a.add("contrast_enhancement", '\0', "contrast Enhancement");
     a.add("preload", '\0', "[preload]");
-    a.add("play-audio", '\0', "play audio with ffplay");
+    a.add("play_audio", '\0', "play audio with ffplay");
     a.parse_check(argc, argv);
 
     int x, y;
     sscanf(a.get<std::string>("scale").c_str(), "%d:%d", &x, &y);
-    play(a.get<std::string>("input"), a.get<std::string>("output"), a.get<std::string>("audio"), a.get<std::string>("map"), x, y, a.get<double>("rate"), a.exist("not-clear"), a.exist("contrast-enhancement"), a.exist("preload"), a.exist("play-audio"));
+    play(a.get<std::string>("input"), a.get<std::string>("output"), a.get<std::string>("audio"), a.get<std::string>("font"), x, y, a.get<double>("rate"), a.exist("not_clear"), a.exist("contrast_enhancement"), a.exist("preload"), a.exist("play_audio"));
 }
