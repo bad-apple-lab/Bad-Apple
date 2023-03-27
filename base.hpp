@@ -52,7 +52,6 @@ public:
 };
 
 const int MAXCOL = 0x100;
-char map[MAXCOL][MAXCOL];
 
 class Font {
 private:
@@ -60,7 +59,7 @@ private:
     FILE *f;
     inline int g() {
         int c = getc(f);
-        while (c == 13 || c == 10) {
+        while (c == '\n' || c == '\r') {
             c = getc(f);
         }
         return c;
@@ -82,7 +81,6 @@ private:
         }
         for (auto i = 0; i < MAXCOL; i++) {
             for (auto j = 0; j < MAXCOL; j++) {
-                g();
                 o[i][j] = g();
             }
         }

@@ -14,7 +14,7 @@ inline int play(
     std::string video,
     std::string output,  // default stdout
     std::string audio,   // default use video
-    std::string font,    // default use map in "consola_0_0ff.h"
+    std::string font,    // default "font/consola_0_0ff.h"
     int x,               // width
     int y,               // height
     int fps,             // frame rate
@@ -54,7 +54,7 @@ inline int play(
         return replay(video, audio, not_clear, play_audio);
     }
 
-    Font *map = new Font(font);
+    Font *fnt = new Font(font);
 
     // x += x & 1;
     y += y & 1;
@@ -79,8 +79,6 @@ inline int play(
     B *f = (B *)malloc(xy);
     char *buffer = (char *)malloc(print_size + 2);
     Timer *timer = new Timer(clk);
-    // auto t0 = std::chrono::steady_clock::now();
-    // auto t1 = std::chrono::steady_clock::now();
 
     if (ready_to_read()) {
         throws("Failed to read video.");
@@ -112,7 +110,6 @@ inline int play(
         printf(not_clear ? "\n" : "\x1b[256F\x1b[0J");
         fflush(stdout);
         timer->bg();
-        // t0 = std::chrono::steady_clock::now();
     }
 
     for (auto i = 0;; i++) {
@@ -145,15 +142,15 @@ inline int play(
         int buffer_tail = 0;
         for (auto j = 0; j < (y >> 1); j++) {
             for (auto k = 0; k < x; k++) {
-                buffer[buffer_tail++] = map->get(f[(j << 1) * x + k], f[(j << 1 | 1) * x + k]);
+                buffer[buffer_tail++] = fnt->get(f[(j << 1) * x + k], f[(j << 1 | 1) * x + k]);
             }
-            buffer[buffer_tail++] = 10;
+            buffer[buffer_tail++] = '\n';
         }
-        buffer[buffer_tail++] = 10;
+        buffer[buffer_tail++] = '\n';
 
 #ifdef DEBUG
         for (int _ = 0; _ <= print_size; _++) {
-            if (buffer[_] == 10 || (buffer[_] <= 126 && buffer[_] >= 32)) continue;
+            if (buffer[_] == '\n' || (buffer[_] <= 126 && buffer[_] >= 32)) continue;
             printf("[%d:%d]", _, buffer[_]);
             fflush(stdout);
             throws("WTF");
@@ -168,11 +165,6 @@ inline int play(
             fwrite(buffer, 1, print_size, stdout);
             fflush(stdout);
             timer->slp();
-            // t1 = std::chrono::steady_clock::now();
-            // while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
-            //     t1 = std::chrono::steady_clock::now();
-            // }
-            // t0 = t1;
         }
     }
 
