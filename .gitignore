@@ -4,6 +4,8 @@
 *.exe
 *.out
 
+*.dll
+
 # video
 *.mp4
 *.avi
@@ -24,9 +26,19 @@
 *.jpeg
 *.webp
 *.bmp
+*.gif
+
+# archive
+*.tar
+*.gz
+*.tgz
+*.rar
+*.zip
+*.7z
 
 archive/
 */temp/
 tempCodeRunnerFile.cpp
 
-!dependencies/**
+!win_dep_bin/**
+!play.gif
