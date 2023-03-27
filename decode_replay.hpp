@@ -63,11 +63,11 @@ inline int replay(
 #ifdef DEBUG
     printf("BEGINNING... [replay] [debug]\n");
     fflush(stdout);
-    second_sleep(3);
+    timer->slp(3);
 #else
     printf("BEGINNING... [replay]\n");
     fflush(stdout);
-    second_sleep(1);
+    timer->slp(1);
 #endif
     if (play_audio) {
         playa(audio);
@@ -87,7 +87,7 @@ inline int replay(
         printf(not_clear ? "\n" : "\x1b[256F");
         fwrite(buffer, 1, print_size, stdout);
         fflush(stdout);
-        timer->slp();
+        timer->wait();
     }
 
     fclose(fp);

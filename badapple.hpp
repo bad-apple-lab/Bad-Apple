@@ -98,11 +98,11 @@ inline int play(
 #ifdef DEBUG
         printf("BEGINNING... [debug]\n");
         fflush(stdout);
-        second_sleep(3);
+        timer->slp(3);
 #else
         printf("BEGINNING...\n");
         fflush(stdout);
-        second_sleep(1);
+        timer->slp(1);
 #endif
         if (play_audio) {
             playa(audio);
@@ -164,7 +164,7 @@ inline int play(
             printf(not_clear ? "\n" : "\x1b[256F");
             fwrite(buffer, 1, print_size, stdout);
             fflush(stdout);
-            timer->slp();
+            timer->wait();
         }
     }
 

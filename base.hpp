@@ -31,17 +31,19 @@ private:
 public:
     LL clk;
     Timer(LL c) : clk(c) {}
-    int bg() {
+    void bg() {
         t0 = std::chrono::steady_clock::now();
-        return 0;
     }
-    int slp() {
+    int wait() {
         auto t1 = std::chrono::steady_clock::now();
         while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
             t1 = std::chrono::steady_clock::now();
         }
         t0 = t1;
         return 0;
+    }
+    void slp(int s){
+        second_sleep(s);
     }
 };
 
