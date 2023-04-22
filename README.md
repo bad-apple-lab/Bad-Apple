@@ -94,13 +94,7 @@ python -u "font/font.py"
 ##### Compile
 
 ```sh
-clang++ "badapple.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
-```
-
-or
-
-```sh
-g++ "badapple.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc
+g++ "badapple-ffmpeg.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc
 ```
 
 #### Windows-OpenCV
@@ -114,13 +108,7 @@ You may need to [compile it yourself](https://github.com/userElaina/OpenCV-MinGW
 ##### Compile
 
 ```sh
-clang++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "$Env:OPENCV470\include\opencv2" -L "$Env:OPENCV470\x64\mingw\lib" -llibopencv_world470 -w -g -O3 -static-libgcc --target=x86_64-w64-mingw
-```
-
-or
-
-```sh
-g++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "$Env:OPENCV470\include\opencv2" -L "$Env:OPENCV470\x64\mingw\lib" -llibopencv_world470 -w -g -O3 -static-libgcc
+g++ "badapple-opencv.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "$Env:OPENCV470\include\opencv2" -L "$Env:OPENCV470\x64\mingw\lib" -llibopencv_world470 -w -g -O3 -static-libgcc
 ```
 
 ### Linux-FFmpeg
@@ -132,18 +120,20 @@ g++ "badapple.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "
 Use your package manager to install or upgrade C++ compiler, FFmpeg and dependencies if need, like
 
 ```sh
+# Debian Ubuntu
 sudo apt update
 sudo apt install --upgrade gcc g++ ffmpeg
 ```
 
 ```sh
+# Arch
 sudo pacman -Syu gcc ffmpeg
 ```
 
 ##### Compile
 
 ```sh
-g++ "badapple.cpp" -o "badapple-ffmpeg-linux.out" -w -g -O3 -static-libgcc
+g++ "badapple-ffmpeg.cpp" -o "badapple-ffmpeg-linux.out" -w -g -O3 -static-libgcc
 ```
 
 #### Linux-OpenCV
@@ -153,20 +143,24 @@ g++ "badapple.cpp" -o "badapple-ffmpeg-linux.out" -w -g -O3 -static-libgcc
 Use your package manager to install or upgrade C++ compiler, OpenCV and dependencies if need, like
 
 ```sh
+# Debian Ubuntu
 sudo apt update
 sudo apt install --upgrade gcc g++ libopencv-dev
 ```
 
 ```sh
+# Arch
 sudo pacman -Syu gcc opencv vtk hdf5 pkgconf
 ```
 
 ##### Compile
 
 ```sh
-g++ "badapple.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkg-config --cflags --libs opencv4`
+# Debian Ubuntu
+g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkg-config --cflags --libs opencv4`
 ```
 
 ```sh
-g++ "badapple.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkgconf --cflags --libs opencv4`
+# Arch
+g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkgconf --cflags --libs opencv4`
 ```
