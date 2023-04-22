@@ -164,3 +164,7 @@ g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgc
 # Arch
 g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkgconf --cflags --libs opencv4`
 ```
+
+### To Do
+
+use `make` to compile.
