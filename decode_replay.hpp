@@ -54,18 +54,18 @@ inline int replay(
     const int y = r();
     const int clk = r();
 
-    printf("[%d:%d %.2lfHz]\n", x, y, CLOCKS_PER_SEC / (double)clk);
+    printf("[%d:%d %.2lfHz replay]\n", x, y, CLOCKS_PER_SEC / (double)clk);
 
     const int print_size = (x + 1) * y;
     char* buffer = (char*)malloc(print_size + 2);
     Timer *timer=new Timer(clk);
 
 #ifdef DEBUG
-    printf("BEGINNING... [replay] [debug]\n");
+    printf("BEGINNING... [debug]\n");
     fflush(stdout);
     timer->slp(3);
 #else
-    printf("BEGINNING... [replay]\n");
+    printf("BEGINNING...\n");
     fflush(stdout);
     timer->slp(1);
 #endif

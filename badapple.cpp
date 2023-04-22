@@ -30,13 +30,13 @@ int main(int argc, char** argv) {
     a.footer(footer.c_str());
     a.add<std::string>("input", 'i', "video file", false, "./badapple.mp4");
     a.add<std::string>("output", 'o', "[preload] output file", false, "");
-    a.add<std::string>("audio", 'a', "audio file", false, "");
     a.add<std::string>("font", 'f', "font data file", false, "");
+    a.add<std::string>("audio", 'a', "[play_audio] audio file", false, "");
     a.add<std::string>("scale", 's', "width:height", false, "72:54");
     a.add<double>("rate", 'r', "frame rate", false, 1024.0);
-    a.add("not_clear", '\0', "don't clear screen (using ANSI) before print a frame");
+    a.add("not_clear", '\0', "not clear screen (using ANSI) before print a frame");
     a.add("contrast_enhancement", '\0', "contrast Enhancement");
-    a.add("preload", '\0', "[preload]");
+    a.add("preload", '\0', "preload video (not play)");
     a.add("play_audio", '\0', "play audio with ffplay");
     a.parse_check(argc, argv);
 
