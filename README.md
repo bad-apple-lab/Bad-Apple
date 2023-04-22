@@ -19,17 +19,17 @@ Automatically enter preload-replay mode when the input file extension is `.badap
 
 ```markdown
 usage: badapple [options] ... 
-  (BadApple-ffmpeg_or_opencv-os-isa-version)
+  (BadApple-FFmpeg_or_OpenCV-OS-ISA-Version)
 options:
   -i, --input                   video file (string [=./badapple.mp4])
   -o, --output                  [preload] output file (string [=])
-  -a, --audio                   audio file (string [=])
   -f, --font                    font data file (string [=])
+  -a, --audio                   [play_audio] audio file (string [=])
   -s, --scale                   width:height (string [=72:54])
   -r, --rate                    frame rate (double [=1024])
-      --not_clear               don't clear screen (using ANSI) before print a frame
+      --not_clear               not clear screen (using ANSI) before print a frame
       --contrast_enhancement    contrast Enhancement
-      --preload                 [preload]
+      --preload                 preload video (not play)
       --play_audio              play audio with ffplay
   -?, --help                    print this message
 ```
