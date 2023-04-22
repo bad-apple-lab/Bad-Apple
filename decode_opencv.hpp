@@ -1,7 +1,7 @@
 #pragma once
 
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include "base.hpp"
 
@@ -48,8 +48,8 @@ inline int read_a_frame(B *f) {
     if (frame.empty()) {
         return 1;
     }
-    cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::resize(frame, frame, cv::Size(x, y), 0, 0, cv::INTER_CUBIC);
+    cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     // (x, y) (frame.cols, frame.rows) (72, 54)
     memcpy(f, frame.data, xy);
     return 0;
