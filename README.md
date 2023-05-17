@@ -145,7 +145,7 @@ Use your package manager to install or upgrade C++ compiler, OpenCV and dependen
 ```sh
 # Debian Ubuntu
 sudo apt update
-sudo apt install --upgrade gcc g++ libopencv-dev
+sudo apt install --upgrade gcc g++ libopencv-dev pkg-config
 ```
 
 ```sh
