@@ -3,6 +3,8 @@
 Play the video in the console as ASCII art. 
 ~~You can watch anime by it while you are connected by **SSH**.~~
 
+Where there is light, there is [Bad Apple!!][https://www.youtube.com/watch?v=FtutLA63Cp8]
+
 [Python Module](https://github.com/bad-apple-lab/Bad-Apple-Python-Module)
 
 ![GIF](./play.gif)
