@@ -3,8 +3,7 @@
 Play the video in the console as ASCII art. 
 ~~You can watch anime by it while you are connected by **SSH**.~~
 
-以 ASCII art 的形式在控制台中播放视频. 
-~~你甚至可以利用它在 **SSH** 中看番.~~
+[Python Module](https://github.com/bad-apple-lab/Bad-Apple-Python-Module)
 
 ![GIF](./play.gif)
 
@@ -39,14 +38,6 @@ options:
 ```sh
 git clone --recurse-submodules --remote-submodule https://github.com/userElaina/Bad-Apple.git
 ```
-
-### To do
-
-Automatic parameter setting through information from video and hardware.
-
-### License
-
-The code is available under the [MIT license](./LICENSE).
 
 ### How to build
 
@@ -156,15 +147,11 @@ sudo pacman -Syu gcc opencv vtk hdf5 pkgconf
 ##### Compile
 
 ```sh
-# Debian Ubuntu
 g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkg-config --cflags --libs opencv4`
-```
-
-```sh
-# Arch
-g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkgconf --cflags --libs opencv4`
 ```
 
 ### To Do
 
-use `make` to compile.
+Use `make` to compile.
+
+Automatic parameter setting through information from video and hardware.
