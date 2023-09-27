@@ -87,7 +87,7 @@ python -u "font/font.py"
 ##### Compile
 
 ```sh
-g++ "badapple-ffmpeg.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3 -static-libgcc
+g++ "badapple-ffmpeg.cpp" -o "badapple-ffmpeg-win.exe" -w -g -O3
 ```
 
 #### Windows-OpenCV
@@ -101,7 +101,13 @@ You may need to [compile it yourself](https://github.com/userElaina/OpenCV-MinGW
 ##### Compile
 
 ```sh
-g++ "badapple-opencv.cpp" -o "badapple-opencv-win.exe" -I "$Env:OPENCV470\include" -I "$Env:OPENCV470\include\opencv2" -L "$Env:OPENCV470\x64\mingw\lib" -llibopencv_world470 -w -g -O3 -static-libgcc
+# Dynamic (libopencv_world481.dll)
+g++ "badapple-opencv.cpp" -o "badapple-opencv481d-v2.1.0-win-amd64.exe" -w -g -O3 -I"$Env:OPENCV481\include" -L"$Env:OPENCV481\x64\mingw\lib" -llibopencv_world481
+```
+
+```sh
+# Static (libopencv_world481.a)
+g++ "badapple-opencv.cpp" -o "badapple-opencv481s-v2.1.0-win-amd64.exe" -w -g -O3 -static -I"$Env:OPENCV481A\include" -L"$Env:OPENCV481A\x64\mingw\staticlib" -lopencv_world481 -llibprotobuf -llibjpeg-turbo -llibwebp -llibpng -llibtiff -llibopenjp2 -lIlmImf -lzlib -lquirc -lade -lcomctl32 -lgdi32 -lole32 -lsetupapi -lwsock32 -lws2_32 -lpthread -luuid -loleaut32
 ```
 
 ### Linux-FFmpeg
@@ -126,7 +132,7 @@ sudo pacman -Syu gcc ffmpeg
 ##### Compile
 
 ```sh
-g++ "badapple-ffmpeg.cpp" -o "badapple-ffmpeg-linux.out" -w -g -O3 -static-libgcc
+g++ "badapple-ffmpeg.cpp" -o "badapple-ffmpeg-linux.out" -w -g -O3
 ```
 
 #### Linux-OpenCV
@@ -149,7 +155,7 @@ sudo pacman -Syu gcc opencv vtk hdf5 pkgconf
 ##### Compile
 
 ```sh
-g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 -static-libgcc `pkg-config --cflags --libs opencv4`
+g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 `pkg-config --cflags --libs opencv4`
 ```
 
 ### To Do
