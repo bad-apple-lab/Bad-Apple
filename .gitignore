@@ -4,6 +4,9 @@
 *.exe
 *.out
 
+*.a
+*.so
+*.lib
 *.dll
 
 # video
