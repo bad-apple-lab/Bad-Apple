@@ -1,12 +1,5 @@
-#!/bin/bash
-read -p 'Enter name: ' name
-$name --qwq
-read
-$name -i Elysia1.mp4 -o ba.badapple -r 10
-read
-$name -i ba.badapple -a badapple.mp4
-read
-$name -i NCOP.mkv -s 96:54 --contrast_enhancement --play_audio
-read
-$name
-read
+./ba --qwq
+./ba -i archive/Elysia1.mp4 -o archive/ba.badapple -r 10
+./ba -i archive/ba.badapple -a archive/badapple.mp4
+./ba -i archive/NCOP.mkv -s 96:54 --contrast_enhancement --play_audio
+./ba
