@@ -60,7 +60,14 @@ inline int play(
     y += y & 1;
     const int xy = x * y;
 
-    VideoProperties *vp = analysis(video, x, y);
+#ifdef DECODE_FFMPEG
+    Decoder_FFmpeg *decoder = new Decoder_FFmpeg(video.c_str());
+#else
+#ifdef DECODE_OPENCV
+    Decoder_OpenCV *decoder = new Decoder_OpenCV(video);
+#endif
+#endif
+    VideoProperties *vp = decoder->analysis();
     if (!vp) {
         throws("Failed to analysis video.");
         return 1;
@@ -80,7 +87,7 @@ inline int play(
     char *buffer = (char *)malloc(print_size + 2);
     Timer *timer = new Timer(clk);
 
-    if (ready_to_read()) {
+    if (decoder->ready_to_read(x, y)) {
         throws("Failed to read video.");
         return 1;
     }
@@ -113,7 +120,7 @@ inline int play(
     }
 
     for (auto i = 0;; i++) {
-        if (read_a_frame(f)) {
+        if (decoder->read_a_frame(f)) {
             if (!i) {
                 throws("The first frame is empty.");
                 return 1;
@@ -148,15 +155,13 @@ inline int play(
         }
         buffer[buffer_tail++] = '\n';
 
-#ifdef DEBUG
-        for (int _ = 0; _ <= print_size; _++) {
-            if (buffer[_] == '\n' || (buffer[_] <= 126 && buffer[_] >= 32)) continue;
-            printf("[%d:%d]", _, buffer[_]);
-            fflush(stdout);
-            throws("WTF");
-            exit(0);
-        }
-#endif
+        // for (int _ = 0; _ <= print_size; _++) {
+        //     if (buffer[_] == '\n' || (buffer[_] <= 126 && buffer[_] >= 32)) continue;
+        //     printf("[%d:%d]", _, buffer[_]);
+        //     fflush(stdout);
+        //     throws("WTF");
+        //     exit(0);
+        // }
 
         if (preload) {
             fwrite(buffer, 1, print_size + 1, fp);
@@ -168,7 +173,7 @@ inline int play(
         }
     }
 
-    cls();
+    decoder->cls();
     if (preload) {
         fclose(fp);
     }
