@@ -42,7 +42,7 @@ public:
         t0 = t1;
         return 0;
     }
-    void slp(int s){
+    void slp(int s) {
         second_sleep(s);
     }
 };
@@ -51,6 +51,25 @@ class VideoProperties {
 public:
     int width, height, nb_frames = 1;
     double rate, duration = 0.0;
+};
+
+class Decoder {
+public:
+    std::string video;
+    int x, y, xy;
+
+    Decoder(std::string _video) { video = _video; }
+    virtual VideoProperties *analysis() {}
+    virtual inline int ready_to_read(int _x, int _y) {
+        x = _x;
+        y = _y;
+        xy = x * y;
+        return 0;
+    }
+    virtual inline int read_a_frame(B *f) {}
+    virtual inline void cls() {
+        return;
+    }
 };
 
 const int MAXCOL = 0x100;
