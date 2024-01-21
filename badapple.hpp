@@ -1,14 +1,8 @@
 #pragma once
 
-#include "decode_replay.hpp"
-
-#ifdef DECODE_FFMPEG
-#include "decode_ffmpeg.hpp"
-#else
-#ifdef DECODE_OPENCV
-#include "decode_opencv.hpp"
-#endif
-#endif
+#include "encode_re.hpp"
+#include "encode_rt.hpp"
+#include "preloader.hpp"
 
 inline int play(
     std::string video,
@@ -51,50 +45,14 @@ inline int play(
         audio = video;
     }
 
+    Encoder *encoder;
     if (endswith(video, ".badapple")) {
-        return replay(video, audio, not_clear, play_audio);
+        encoder = new Encoder_Re(video, debug);
+    } else {
+        encoder = new Encoder_RT(video, font, x, y, fps, contrast = 0, debug = 0);
     }
 
-    Font *fnt = new Font(font);
-
-    // x += x & 1;
-    y += y & 1;
-    const int xy = x * y;
-
-#ifdef DECODE_FFMPEG
-    Decoder_FFmpeg *decoder = new Decoder_FFmpeg(video.c_str());
-#else
-#ifdef DECODE_OPENCV
-    Decoder_OpenCV *decoder = new Decoder_OpenCV(video);
-#endif
-#endif
-    VideoProperties *vp = decoder->analysis();
-    if (!vp) {
-        throws("Failed to analysis video.");
-        return 1;
-    }
-
-    int mo = 0.5 + vp->rate / fps;
-    if (!mo) {
-        mo = 1;
-    }
-    const LL clk = mo * 1000000LL / vp->rate;
-
-    printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs %s\n",
-           vp->width, vp->height, vp->rate,
-           x, y, vp->rate / mo,
-           vp->duration, debug ? "[debug]" : "");
-    // [1444:1080 29.97Hz] -> [76:54 9.99Hz] 232.065s [debug]
-
-    const int print_size = (x + 1) * (y >> 1);
-    B *frame = (B *)malloc(xy);
-    char *buffer = (char *)malloc(print_size + 2);
-    Timer *timer = new Timer(clk);
-
-    if (decoder->ready_to_read(x, y)) {
-        throws("Failed to read video.");
-        return 1;
-    }
+    Timer *timer = new Timer(encoder->clk);
 
     if (preload) {
         fp = fopen(output.c_str(), "w");
@@ -104,7 +62,7 @@ inline int play(
             getchar();
             return 1;
         }
-        compress(x, y, clk, fp);
+        Preloader *preloader = new Preloader(encoder->x, encoder->y, encoder->clk, fp);
     } else {
         printf("BEGINNING...\n");
         fflush(stdout);
@@ -118,62 +76,43 @@ inline int play(
     }
 
     for (auto i = 0;; i++) {
-        if (decoder->read_a_frame(frame)) {
+        if (encoder->read_a_frame()) {
             if (!i) {
                 throws("The first frame is empty.");
                 return 1;
             }
             break;
         }
-        if (i % mo) continue;
+        if (i % encoder->mo) continue;
 
-        if (contrast) {
-            int max_pixel = 0, min_pixel = 255;
-            for (auto j = 0; j < xy; j++) {
-                if (frame[j] > max_pixel) max_pixel = frame[j];
-                if (frame[j] < min_pixel) min_pixel = frame[j];
-            }
+        encoder->refresh_buffer();
 
-            if (max_pixel ^ min_pixel) {
-                int range = max_pixel - min_pixel;
-                for (auto j = 0; j < xy; j++) {
-                    frame[j] = (frame[j] - min_pixel) * 0xff / range;
-                }
-            } else {
-                memset(frame, max_pixel & 128 ? 0xff : 0x00, xy);
-            }
-        }
-
-        int buffer_tail = 0;
-        for (auto j = 0; j < (y >> 1); j++) {
-            for (auto k = 0; k < x; k++) {
-                buffer[buffer_tail++] = fnt->get(frame[(j << 1) * x + k],
-                                                 frame[(j << 1 | 1) * x + k]);
-            }
-            buffer[buffer_tail++] = '\n';
-        }
-        buffer[buffer_tail++] = '\n';
-
-        // for (int _ = 0; _ <= print_size; _++) {
-        //     if (buffer[_] == '\n' || (buffer[_] <= 126 && buffer[_] >= 32))
+        // printf("prt_sz %d \n", encoder->print_size);
+        // for (int _ = 0; _ <= encoder->print_size; _++) {
+        //     if (encoder->buffer[_] == '\n')
         //         continue;
-        //     printf("[%d:%d]", _, buffer[_]);
+        //     if (encoder->buffer[_] <= 126 && encoder->buffer[_] >= 32)
+        //         continue;
+        //     printf("[%d:%d]", _, encoder->buffer[_]);
         //     fflush(stdout);
         //     throws("WTF");
         //     exit(0);
         // }
+        // fflush(stdout);
+        // throws("WTF");
+        // exit(0);
 
         if (preload) {
-            fwrite(buffer, 1, print_size + 1, fp);
+            fwrite(encoder->buffer, 1, encoder->print_size + 1, fp);
         } else {
             printf(not_clear ? "\n" : "\x1b[256F");
-            fwrite(buffer, 1, print_size, stdout);
+            fwrite(encoder->buffer, 1, encoder->print_size, stdout);
             fflush(stdout);
             timer->wait();
         }
     }
 
-    decoder->cls();
+    encoder->cls();
     if (preload) {
         fclose(fp);
     }

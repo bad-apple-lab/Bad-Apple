@@ -72,6 +72,16 @@ public:
     }
 };
 
+class Encoder {
+public:
+    int x, y, mo = 1, print_size;
+    LL clk;
+    char* buffer;
+    virtual int read_a_frame() {}
+    virtual void refresh_buffer() {}
+    virtual void cls() {}
+};
+
 const int MAXCOL = 0x100;
 
 class Font {
