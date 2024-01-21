@@ -4,6 +4,7 @@
 #include <Windows.h>
 #else
 #include <unistd.h>
+#include <sys/ioctl.h>
 #endif
 
 inline std::string short_isa_name() {
@@ -114,4 +115,18 @@ inline void pipe_pclose(FILE* pipe) {
 #else
     pclose(pipe);
 #endif
+}
+
+inline int get_console_size() {
+#if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    int ret = GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    if (ret) {
+        return ((int)csbi.dwSize.Y) << 16 | ((int)csbi.dwSize.X);
+    }
+#else
+    struct winsize csbi;
+    return ((int)csbi.ws_row) << 16 | ((int)csbi.ws_col);
+#endif
+    return 0;
 }
