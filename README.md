@@ -163,3 +163,5 @@ g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 `pkg-config -
 Use `make` to compile.
 
 Automatic parameter setting through information from video and hardware.
+
+Choose audio player.
