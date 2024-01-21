@@ -1,6 +1,5 @@
 #pragma once
 
-// #define DEBUG
 // #define DECODE_FFMPEG
 // #define DECODE_OPENCV
 
@@ -19,11 +18,9 @@ int main(int argc, char** argv) {
 #endif
 #endif
 
-    footer += "-" + short_os_name() + "-" + short_isa_name() + "-" + version + ")";
-
-#ifdef DEBUG
-    footer += " [debug]";
-#endif
+    footer += "-" + short_os_name();
+    footer += "-" + short_isa_name();
+    footer += "-" + version + ")";
 
     cmdline::parser a;
     a.set_program_name("badapple");
@@ -38,9 +35,15 @@ int main(int argc, char** argv) {
     a.add("contrast", '\0', "contrast enhancement");
     a.add("preload", '\0', "preload video (not play)");
     a.add("play_audio", '\0', "play audio with ffplay");
+    a.add("debug", '\0', "[debug]");
     a.parse_check(argc, argv);
 
     int x, y;
     sscanf(a.get<std::string>("scale").c_str(), "%d:%d", &x, &y);
-    play(a.get<std::string>("input"), a.get<std::string>("output"), a.get<std::string>("audio"), a.get<std::string>("font"), x, y, a.get<double>("rate"), a.exist("not_clear"), a.exist("contrast"), a.exist("preload"), a.exist("play_audio"));
+    play(a.get<std::string>("input"), a.get<std::string>("output"),
+         a.get<std::string>("font"), a.get<std::string>("audio"),
+         x, y, a.get<double>("rate"),
+         a.exist("not_clear"), a.exist("contrast"), a.exist("preload"),
+         a.exist("play_audio"),
+         a.exist("debug"));
 }

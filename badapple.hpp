@@ -13,15 +13,16 @@
 inline int play(
     std::string video,
     std::string output,  // default stdout
-    std::string audio,   // default use video
     std::string font,    // default "font/consola_0_0ff.h"
+    std::string audio,   // default use video
     int x,               // width
     int y,               // height
     int fps,             // frame rate
     int not_clear = 0,
-    int contrast_enhancement = 0,
+    int contrast = 0,
     int preload = 0,
-    int play_audio = 0) {
+    int play_audio = 0,
+    int debug = 0) {
     FILE *fp;
     fp = fopen(video.c_str(), "rb");
     if (!fp) {
@@ -79,11 +80,14 @@ inline int play(
     }
     const LL clk = mo * 1000000LL / vp->rate;
 
-    printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs\n", vp->width, vp->height, vp->rate, x, y, vp->rate / mo, vp->duration);
-    // [1444:1080 29.97Hz] -> [76:54 9.99Hz] 232.065s
+    printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs %s\n",
+           vp->width, vp->height, vp->rate,
+           x, y, vp->rate / mo,
+           vp->duration, debug ? "[debug]" : "");
+    // [1444:1080 29.97Hz] -> [76:54 9.99Hz] 232.065s [debug]
 
     const int print_size = (x + 1) * (y >> 1);
-    B *f = (B *)malloc(xy);
+    B *frame = (B *)malloc(xy);
     char *buffer = (char *)malloc(print_size + 2);
     Timer *timer = new Timer(clk);
 
@@ -102,15 +106,9 @@ inline int play(
         }
         compress(x, y, clk, fp);
     } else {
-#ifdef DEBUG
-        printf("BEGINNING... [debug]\n");
-        fflush(stdout);
-        timer->slp(3);
-#else
         printf("BEGINNING...\n");
         fflush(stdout);
-        timer->slp(1);
-#endif
+        timer->slp(debug ? 3 : 1);
         if (play_audio) {
             playa(audio);
         }
@@ -120,7 +118,7 @@ inline int play(
     }
 
     for (auto i = 0;; i++) {
-        if (decoder->read_a_frame(f)) {
+        if (decoder->read_a_frame(frame)) {
             if (!i) {
                 throws("The first frame is empty.");
                 return 1;
@@ -129,34 +127,36 @@ inline int play(
         }
         if (i % mo) continue;
 
-        if (contrast_enhancement) {
+        if (contrast) {
             int max_pixel = 0, min_pixel = 255;
             for (auto j = 0; j < xy; j++) {
-                if (f[j] > max_pixel) max_pixel = f[j];
-                if (f[j] < min_pixel) min_pixel = f[j];
+                if (frame[j] > max_pixel) max_pixel = frame[j];
+                if (frame[j] < min_pixel) min_pixel = frame[j];
             }
 
             if (max_pixel ^ min_pixel) {
                 int range = max_pixel - min_pixel;
                 for (auto j = 0; j < xy; j++) {
-                    f[j] = (f[j] - min_pixel) * 0xff / range;
+                    frame[j] = (frame[j] - min_pixel) * 0xff / range;
                 }
             } else {
-                memset(f, max_pixel & 128 ? 0xff : 0x00, xy);
+                memset(frame, max_pixel & 128 ? 0xff : 0x00, xy);
             }
         }
 
         int buffer_tail = 0;
         for (auto j = 0; j < (y >> 1); j++) {
             for (auto k = 0; k < x; k++) {
-                buffer[buffer_tail++] = fnt->get(f[(j << 1) * x + k], f[(j << 1 | 1) * x + k]);
+                buffer[buffer_tail++] = fnt->get(frame[(j << 1) * x + k],
+                                                 frame[(j << 1 | 1) * x + k]);
             }
             buffer[buffer_tail++] = '\n';
         }
         buffer[buffer_tail++] = '\n';
 
         // for (int _ = 0; _ <= print_size; _++) {
-        //     if (buffer[_] == '\n' || (buffer[_] <= 126 && buffer[_] >= 32)) continue;
+        //     if (buffer[_] == '\n' || (buffer[_] <= 126 && buffer[_] >= 32))
+        //         continue;
         //     printf("[%d:%d]", _, buffer[_]);
         //     fflush(stdout);
         //     throws("WTF");

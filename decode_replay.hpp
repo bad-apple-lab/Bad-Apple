@@ -45,7 +45,8 @@ inline int replay(
     std::string video,
     std::string audio,
     int not_clear = 0,
-    int play_audio = 0) {
+    int play_audio = 0,
+    int debug = 0) {
     using namespace decode_replay;
 
     fp = fopen(video.c_str(), "r");
@@ -54,21 +55,17 @@ inline int replay(
     const int y = r();
     const int clk = r();
 
-    printf("[%d:%d %.2lfHz replay]\n", x, y, CLOCKS_PER_SEC / (double)clk);
+    printf("[%d:%d %.2lfHz] ->[replay] %s\n",
+           x, y, CLOCKS_PER_SEC / (double)clk,
+           debug ? "[debug]" : "" x);
 
     const int print_size = (x + 1) * y;
     char* buffer = (char*)malloc(print_size + 2);
-    Timer *timer=new Timer(clk);
+    Timer* timer = new Timer(clk);
 
-#ifdef DEBUG
-    printf("BEGINNING... [debug]\n");
-    fflush(stdout);
-    timer->slp(3);
-#else
     printf("BEGINNING...\n");
     fflush(stdout);
-    timer->slp(1);
-#endif
+    timer->slp(debug ? 3 : 1);
     if (play_audio) {
         playa(audio);
     }

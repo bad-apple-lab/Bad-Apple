@@ -33,7 +33,8 @@ public:
     Decoder_FFmpeg(std::string _video) : Decoder(_video){};
 
     inline VideoProperties *analysis() {
-        std::string cmd = (std::string) "ffprobe -v quiet -show_streams -select_streams v \"" + video + "\"";
+        std::string cmd = "ffprobe -v quiet -show_streams -select_streams v";
+        cmd += " \"" + video + "\"";
         // printf("%s\n", cmd.c_str());
 
         VideoProperties *vp = new VideoProperties();
@@ -109,7 +110,9 @@ public:
         x = _x;
         y = _y;
         xy = x * y;
-        std::string cmd = (std::string) "ffmpeg -v quiet -i \"" + video + "\" -vf scale=" + std::to_string(x) + ":" + std::to_string(y) + " -c:v rawvideo -pix_fmt gray -f rawvideo -";
+        std::string cmd = "ffmpeg -v quiet -i \"" + video + "\"";
+        cmd += " -vf scale=" + std::to_string(x) + ":" + std::to_string(y);
+        cmd += " -c:v rawvideo -pix_fmt gray -f rawvideo -";
         // printf("%s\n", cmd.c_str());
 
         fp = rb_popen(cmd);
