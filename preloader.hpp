@@ -2,7 +2,7 @@
 
 #include "base.hpp"
 
-class Preloader {
+class Preloader : public Outer {
 private:
     FILE* fp;
     inline void pt(int c) {
@@ -14,8 +14,12 @@ private:
     }
 
 public:
-    Preloader(int x, int y, int clk, FILE* _fp) {
-        fp = _fp;
+    Preloader(std::string output, int x, int y, int clk) {
+        fp = fopen(output.c_str(), "w");
+        if (!fp) {
+            throws("Open output file failed.");
+            return;
+        }
         w(x);
         pt(32);
         w(y >> 1);
@@ -25,4 +29,10 @@ public:
         // pt(10);
         pt(10);
     }
+
+    inline void print_a_frame(char* buffer, int print_size) {
+        fwrite(buffer, 1, print_size + 1, fp);
+    }
+
+    inline void close() { fclose(fp); }
 };

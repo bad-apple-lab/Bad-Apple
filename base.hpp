@@ -90,6 +90,12 @@ public:
     virtual inline void cls() {}
 };
 
+class Outer {
+public:
+    virtual inline void print_a_frame(char *, int) {}
+    virtual inline void close() {}
+};
+
 const int MAXCOL = 0x100;
 
 class Font {

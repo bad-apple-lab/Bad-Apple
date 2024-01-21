@@ -3,6 +3,7 @@
 #include "encode_re.hpp"
 #include "encode_rt.hpp"
 #include "preloader.hpp"
+#include "printer.hpp"
 
 inline int play(
     std::string video,
@@ -41,26 +42,11 @@ inline int play(
         encoder = new Encoder_RT(video, font, x, y, fps, contrast = 0, debug = 0);
     }
 
-    FILE *fp;
-    Timer *timer = new Timer(encoder->clk);
-
+    Outer *outer;
     if (preload) {
-        fp = fopen(output.c_str(), "w");
-        if (!fp) {
-            throws("Open output file failed.");
-            return 1;
-        }
-        Preloader *preloader = new Preloader(encoder->x, encoder->y, encoder->clk, fp);
+        outer = new Preloader(output, encoder->x, encoder->y, encoder->clk);
     } else {
-        // printf("BEGINNING...\n");
-        // fflush(stdout);
-        timer->slp(debug ? 3 : 1);
-        if (play_audio) {
-            playa(audio);
-        }
-        printf(not_clear ? "\n" : "\x1b[256F\x1b[0J");
-        fflush(stdout);
-        timer->bg();
+        outer = new Printer(audio, encoder->clk, not_clear, play_audio, debug);
     }
 
     for (auto i = 0;; i++) {
@@ -72,37 +58,11 @@ inline int play(
             break;
         }
         if (i % encoder->mo) continue;
-
         encoder->refresh_buffer();
-
-        // printf("prt_sz %d \n", encoder->print_size);
-        // for (int _ = 0; _ <= encoder->print_size; _++) {
-        //     if (encoder->buffer[_] == '\n')
-        //         continue;
-        //     if (encoder->buffer[_] <= 126 && encoder->buffer[_] >= 32)
-        //         continue;
-        //     printf("[%d:%d]", _, encoder->buffer[_]);
-        //     fflush(stdout);
-        //     throws("WTF");
-        //     exit(0);
-        // }
-        // fflush(stdout);
-        // throws("WTF");
-        // exit(0);
-
-        if (preload) {
-            fwrite(encoder->buffer, 1, encoder->print_size + 1, fp);
-        } else {
-            printf(not_clear ? "\n" : "\x1b[256F");
-            fwrite(encoder->buffer, 1, encoder->print_size, stdout);
-            fflush(stdout);
-            timer->wait();
-        }
+        outer->print_a_frame(encoder->buffer, encoder->print_size);
     }
 
     encoder->cls();
-    if (preload) {
-        fclose(fp);
-    }
+    outer->close();
     return 0;
 }
