@@ -59,17 +59,15 @@ public:
     int x, y, xy;
 
     Decoder(std::string _video) { video = _video; }
-    virtual VideoProperties *analysis() {}
+    virtual VideoProperties *analysis() { return nullptr; }
     virtual inline int ready_to_read(int _x, int _y) {
         x = _x;
         y = _y;
         xy = x * y;
         return 0;
     }
-    virtual inline int read_a_frame(B *f) {}
-    virtual inline void cls() {
-        return;
-    }
+    virtual inline int read_a_frame(B *f) { return 1; }
+    virtual inline void cls() {}
 };
 
 class Encoder {
@@ -77,9 +75,9 @@ public:
     int x, y, mo = 1, print_size;
     LL clk;
     char *buffer;
-    virtual int read_a_frame() {}
-    virtual void refresh_buffer() {}
-    virtual void cls() {}
+    virtual inline int read_a_frame() { return 1; }
+    virtual inline void refresh_buffer() {}
+    virtual inline void cls() {}
 };
 
 const int MAXCOL = 0x100;
@@ -87,11 +85,11 @@ const int MAXCOL = 0x100;
 class Font {
 private:
     char o[MAXCOL][MAXCOL];
-    FILE *f;
+    FILE *fp;
     inline int g() {
-        int c = getc(f);
+        int c = getc(fp);
         while (c == '\n' || c == '\r') {
-            c = getc(f);
+            c = getc(fp);
         }
         return c;
     }
@@ -105,8 +103,8 @@ private:
             init();
             return;
         }
-        f = fopen(s, "r");
-        if (!f) {
+        fp = fopen(s, "r");
+        if (!fp) {
             init();
             return;
         }
@@ -115,7 +113,7 @@ private:
                 o[i][j] = g();
             }
         }
-        fclose(f);
+        fclose(fp);
     }
 
 public:

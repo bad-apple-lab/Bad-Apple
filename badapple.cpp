@@ -7,7 +7,7 @@
 #include "badapple.hpp"
 
 int main(int argc, char** argv) {
-    std::string version = "v2.1.2a.3";
+    std::string version = "v2.1.2a.4";
     std::string footer = "\n  (BadApple-";
 
 #ifdef DECODE_FFMPEG

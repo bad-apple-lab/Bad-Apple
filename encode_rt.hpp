@@ -92,6 +92,8 @@ public:
             }
         }
 
+        xy = x * y;
+
         printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs/%dms %s\n",
                _w, _h, _r,
                x, y, _r / mo,

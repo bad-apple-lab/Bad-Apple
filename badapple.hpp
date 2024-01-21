@@ -60,8 +60,8 @@ inline int play(
         }
         Preloader *preloader = new Preloader(encoder->x, encoder->y, encoder->clk, fp);
     } else {
-        printf("BEGINNING...\n");
-        fflush(stdout);
+        // printf("BEGINNING...\n");
+        // fflush(stdout);
         timer->slp(debug ? 3 : 1);
         if (play_audio) {
             playa(audio);
