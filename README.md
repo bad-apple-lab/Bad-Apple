@@ -41,41 +41,17 @@ options:
 git clone --recurse-submodules --remote-submodule https://github.com/userElaina/Bad-Apple.git
 ```
 
+or
+
+```sh
+git clone https://github.com/userElaina/Bad-Apple.git
+cd Bad-Apple/
+git submodule update --init
+```
+
 ### How to build
 
 *Only tested on x86_64
-
-**[Fonts Pre-processing](#fonts-pre-processing)**
-
-**[Windows-FFmpeg](#windows-ffmpeg)**
-**[Windows-OpenCV](#windows-opencv)**
-
-**[Linux-FFmpeg](#linux-ffmpeg)**
-**[Linux-OpenCV](#linux-opencv)**
-
-#### Fonts Pre-processing
-
-If you don't want to change the font, then you don't need to use Python.
-
-##### Dependencies
-
-```sh
-pip install pillow
-```
-
-##### Interpret and Run
-
-Change this line
-
-```py
-f_font = 'font/consola.ttf'
-```
-
-to your font file path.
-
-```sh
-python -u "font/font.py"
-```
 
 #### Windows-FFmpeg
 
@@ -156,6 +132,30 @@ sudo pacman -Syu gcc opencv vtk hdf5 pkgconf
 
 ```sh
 g++ "badapple-opencv.cpp" -o "badapple-opencv-linux.out" -w -g -O3 `pkg-config --cflags --libs opencv4`
+```
+
+#### Fonts
+
+If you don't want to change the font, (default font is Consola,) then you don't need to use Python.
+
+##### Dependencies
+
+```sh
+pip install pillow
+```
+
+##### Interpret and Run
+
+Change this line
+
+```py
+f_font = 'font/consola.ttf'
+```
+
+to your font file path.
+
+```sh
+python -u "font/font.py"
 ```
 
 ### To Do
