@@ -48,10 +48,8 @@ public:
 };
 
 class VideoProperties {
-private:
-    int nb_frames = 1;
 public:
-    int width, height;
+    int width, height, nb_frames = 1;
     double rate, duration = 0.0;
 };
 

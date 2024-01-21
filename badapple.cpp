@@ -7,7 +7,7 @@
 #include "badapple.hpp"
 
 int main(int argc, char** argv) {
-    std::string version = "v2.1.2a.2";
+    std::string version = "v2.1.2a.3";
     std::string footer = "\n  (BadApple-";
 
 #ifdef DECODE_FFMPEG
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     a.add<std::string>("output", 'o', "[preload] output file", false, "");
     a.add<std::string>("font", 'f', "font data file", false, "");
     a.add<std::string>("audio", 'a', "audio file", false, "");
-    a.add<std::string>("scale", 's', "width:height", false, "72:54");
+    a.add<std::string>("scale", 's', "width:height (0 means auto)", false, "0:0");
     a.add<double>("rate", 'r', "frame rate", false, 1024.0);
     a.add("not_clear", '\0', "not clear screen (with ANSI) before each frame");
     a.add("contrast", '\0', "contrast enhancement");

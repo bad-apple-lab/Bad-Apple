@@ -20,9 +20,7 @@ inline int play(
     FILE *fp;
     fp = fopen(video.c_str(), "rb");
     if (!fp) {
-        printf("Open video file failed.\n");
-        fflush(stdout);
-        getchar();
+        throws("Open video file failed.");
         return 1;
     }
     fclose(fp);
@@ -57,9 +55,7 @@ inline int play(
     if (preload) {
         fp = fopen(output.c_str(), "w");
         if (!fp) {
-            printf("Open output file failed.\n");
-            fflush(stdout);
-            getchar();
+            throws("Open output file failed.");
             return 1;
         }
         Preloader *preloader = new Preloader(encoder->x, encoder->y, encoder->clk, fp);
