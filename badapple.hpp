@@ -17,13 +17,10 @@ inline int play(
     int preload = 0,
     int play_audio = 0,
     int debug = 0) {
-    FILE *fp;
-    fp = fopen(video.c_str(), "rb");
-    if (!fp) {
+    if (not_exist(video)) {
         throws("Open video file failed.");
         return 1;
     }
-    fclose(fp);
 
     if (output.length()) {
         preload = 1;
@@ -32,13 +29,7 @@ inline int play(
     }
 
     if (audio.length()) {
-        play_audio = 1;
-        fp = fopen(audio.c_str(), "rb");
-        if (!fp) {
-            audio = video;
-        } else {
-            fclose(fp);
-        }
+        play_audio = not_exist(audio) ? 0 : 1;
     } else if (play_audio) {
         audio = video;
     }
@@ -50,6 +41,7 @@ inline int play(
         encoder = new Encoder_RT(video, font, x, y, fps, contrast = 0, debug = 0);
     }
 
+    FILE *fp;
     Timer *timer = new Timer(encoder->clk);
 
     if (preload) {

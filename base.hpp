@@ -15,8 +15,18 @@ inline int endswith(std::string s, std::string sub) {
     return s.rfind(sub) < s.length() && s.rfind(sub) == (s.length() - sub.length());
 }
 
-inline void throws(const char *s) {
-    throw std::runtime_error(std::string(s));
+inline void throws(std::string s) {
+    throw std::runtime_error(s);
+}
+
+inline int not_exist(std::string s) {
+    FILE *fp;
+    fp = fopen(s.c_str(), "rb");
+    if (!fp) {
+        return 1;
+    }
+    fclose(fp);
+    return 0;
 }
 
 inline void playa(std::string audio) {
