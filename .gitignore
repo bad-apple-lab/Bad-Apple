@@ -3,6 +3,7 @@
 # executable
 *.exe
 *.out
+ba
 
 *.a
 *.so
