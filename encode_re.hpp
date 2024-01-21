@@ -15,7 +15,7 @@ private:
         }
         int ans = 0;
         while ('0' <= c && c <= '9') {
-            ans = (ans << 1) + (ans << 3) + c - '0';
+            ans = ans * 10 + c - '0';
             c = gt();
         }
         return ans;

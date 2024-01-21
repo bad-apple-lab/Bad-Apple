@@ -48,8 +48,10 @@ public:
 };
 
 class VideoProperties {
+private:
+    int nb_frames = 1;
 public:
-    int width, height, nb_frames = 1;
+    int width, height;
     double rate, duration = 0.0;
 };
 
@@ -76,7 +78,7 @@ class Encoder {
 public:
     int x, y, mo = 1, print_size;
     LL clk;
-    char* buffer;
+    char *buffer;
     virtual int read_a_frame() {}
     virtual void refresh_buffer() {}
     virtual void cls() {}

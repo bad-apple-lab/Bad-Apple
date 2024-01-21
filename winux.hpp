@@ -126,6 +126,7 @@ inline int get_console_size() {
     }
 #else
     struct winsize csbi;
+    ioctl(0, TIOCGWINSZ, &csbi);
     return ((int)csbi.ws_row) << 16 | ((int)csbi.ws_col);
 #endif
     return 0;
