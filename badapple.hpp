@@ -2,7 +2,6 @@
 
 #include "encode_re.hpp"
 #include "encode_rt.hpp"
-#include "preloader.hpp"
 #include "printer.hpp"
 
 inline int play(
@@ -29,24 +28,22 @@ inline int play(
         output = video + ".badapple";
     }
 
-    if (audio.length()) {
-        play_audio = not_exist(audio) ? 0 : 1;
-    } else if (play_audio) {
-        audio = video;
-    }
-
     Encoder *encoder;
     if (endswith(video, ".badapple")) {
+        if (preload) {
+            throws("Video file is already preloaded.");
+            return 1;
+        }
         encoder = new Encoder_Re(video, debug);
     } else {
-        encoder = new Encoder_RT(video, font, x, y, fps, contrast = 0, debug = 0);
+        encoder = new Encoder_RT(video, font, x, y, fps, contrast, debug);
     }
 
     Outer *outer;
     if (preload) {
-        outer = new Preloader(output, encoder->x, encoder->y, encoder->clk);
+        outer = new Preloader(output, encoder->x, encoder->y, encoder->clk, debug);
     } else {
-        outer = new Printer(audio, encoder->clk, not_clear, play_audio, debug);
+        outer = new Printer(video, audio, encoder->clk, not_clear, play_audio, debug);
     }
 
     for (auto i = 0;; i++) {

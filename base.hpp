@@ -34,6 +34,49 @@ inline void playa(std::string audio) {
     system(background_process(cmd).c_str());
 }
 
+class Player {
+private:
+    std::string audio;
+    int play_audio = 0;
+
+public:
+    Player(
+        std::string video,
+        std::string _audio,
+        int _play_audio,
+        int perload = 0) {
+        if (perload) {
+            return;
+        }
+        if (_audio.length()) {
+            play_audio = 1;
+            if (not_exist(_audio)) {
+                audio = video;
+            } else {
+                audio = _audio;
+            }
+        } else if (_play_audio) {
+            play_audio = 1;
+            audio = video;
+        }
+    }
+
+    inline void play() {
+        if (play_audio) {
+            playa(audio);
+        }
+    }
+};
+
+inline void player_playa(
+    std::string video,
+    std::string audio,
+    int play_audio,
+    int perload = 0) {
+    Player *player = new Player(video, audio, play_audio, perload);
+    player->play();
+}
+
 class Timer {
 private:
     std::chrono::steady_clock::time_point t0;

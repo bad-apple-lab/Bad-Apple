@@ -32,8 +32,8 @@ public:
         int _x,
         int _y,
         int fps,
-        int _contrast = 0,
-        int debug = 0) {
+        int _contrast,
+        int debug) {
         contrast = _contrast;
 
         fnt = new Font(font);

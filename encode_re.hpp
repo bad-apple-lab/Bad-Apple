@@ -25,7 +25,7 @@ private:
     int contrast;
 
 public:
-    Encoder_Re(std::string video, int debug = 0) {
+    Encoder_Re(std::string video, int debug) {
         fp = fopen(video.c_str(), "r");
 
         x = r();
