@@ -1,13 +1,8 @@
 #pragma once
 
-#include <chrono>
-
 #include "winux.hpp"
 #include "util.hpp"
 #include "font.hpp"
-
-#define LL long long
-#define B unsigned char
 
 inline void playa(std::string audio) {
     std::string cmd = "ffplay -v quiet -nodisp -autoexit -hide_banner \"" + audio + "\"";
@@ -56,29 +51,6 @@ inline void player_playa(
     Player *player = new Player(video, audio, play_audio, perload);
     player->play();
 }
-
-class Timer {
-private:
-    std::chrono::steady_clock::time_point t0;
-
-public:
-    LL clk;
-    Timer(LL c) : clk(c) {}
-    inline void bg() {
-        t0 = std::chrono::steady_clock::now();
-    }
-    inline int wait() {
-        auto t1 = std::chrono::steady_clock::now();
-        while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
-            t1 = std::chrono::steady_clock::now();
-        }
-        t0 = t1;
-        return 0;
-    }
-    inline void slp(int s) {
-        second_sleep(s);
-    }
-};
 
 class VideoProperties {
 public:
