@@ -64,7 +64,6 @@ public:
     virtual inline int start() {
         // printf("%s\n", cmd);
 #if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
-        
         WCHAR _wt[265];
         mbstowcs(_wt, cmd, cmd.length() + 1);
         LPWSTR w(_wt);
@@ -147,7 +146,7 @@ public:
 class FFplayPlayer : public Cmd {
 public:
     FFplayPlayer(std::string audio) : Cmd(audio) {
-        sprintf(name, "ffplay");
+        sprintf(name, "ffmpeg");
         sprintf(cmd, "ffplay -v quiet -nodisp -autoexit -hide_banner \"%s\"", audio.c_str());
     }
 };
@@ -189,4 +188,29 @@ public:
     }
 
     inline void join() {}
+};
+
+class Nothing : public Cmd {
+public:
+    Nothing(std::string cmd = "") : Cmd(cmd) {
+        sprintf(cmd, "");
+    }
+
+    inline int start() {}
+
+    inline int run() {}
+
+    inline int is_alive() {
+        return 0;
+    }
+
+    inline int kill() {
+        return 0;
+    }
+
+    inline void join() {}
+
+    inline double wait() {
+        return 0.;
+    }
 };
