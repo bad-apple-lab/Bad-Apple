@@ -4,10 +4,17 @@
 
 #include "winux.hpp"
 
+#ifndef B
 #define B unsigned char
-#define LL long long
+#endif
 
-const int BUF_SIZE = 1 << 8;
+#ifndef LL
+#define LL long long
+#endif
+
+#ifndef BUF_SIZE
+#define BUF_SIZE (1 << 8)
+#endif
 
 inline int endswith(std::string s, std::string sub) {
     return s.rfind(sub) < s.length() && s.rfind(sub) == (s.length() - sub.length());
@@ -56,13 +63,12 @@ public:
     inline void bg() {
         t0 = std::chrono::steady_clock::now();
     }
-    inline int wait() {
+    inline void wait() {
         auto t1 = std::chrono::steady_clock::now();
         while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
             t1 = std::chrono::steady_clock::now();
         }
         t0 = t1;
-        return 0;
     }
     inline void slp(int s) {
         second_sleep(s);

@@ -5,17 +5,16 @@
 #include "printer.hpp"
 
 inline int play(
-    std::string video,
+    std::string video,   // default "badapple.mp4"
     std::string output,  // default stdout
+    std::string audio,   // default `video`
+    std::string player,  // default ffmpeg
     std::string font,    // default "font/consola_0_0ff.h"
-    std::string audio,   // default use video
-    int x,               // width
-    int y,               // height
-    int fps,             // frame rate
+    std::string scale,   // width:height
+    int fps,             // frame per second
     int not_clear = 0,
     int contrast = 0,
     int preload = 0,
-    int play_audio = 0,
     int debug = 0) {
     if (not_exist(video)) {
         throws("Open video file failed.");
@@ -28,23 +27,27 @@ inline int play(
         output = video + ".badapple";
     }
 
+    Cmd *clplayer(get_player(video, audio, player, preload));
+
     Encoder *enc;
     if (endswith(video, ".badapple")) {
         if (preload) {
             throws("Video file is already preloaded.");
             return 1;
         }
-        enc = new Encoder_Re(video, debug);
+        enc = new Encoder_Re(video, clplayer->name, debug);
     } else {
-        enc = new Encoder_RT(video, font, x, y, fps, contrast, debug);
+        enc = new Encoder_RT(video, font, scale, fps, contrast, clplayer->name, debug);
     }
 
     Outer *outer;
     if (preload) {
         outer = new Preloader(output, enc->x, enc->y, enc->clk, debug);
     } else {
-        outer = new Printer(video, audio, enc->clk, not_clear, play_audio, debug);
+        outer = new Printer(enc->clk, not_clear, debug);
     }
+
+    clplayer->start();
 
     for (auto i = 0;; i++) {
         if (enc->read_a_frame()) {
@@ -60,6 +63,7 @@ inline int play(
     }
 
     enc->cls();
-    outer->close();
+    outer->cls();
+    clplayer->terminate();
     return 0;
 }

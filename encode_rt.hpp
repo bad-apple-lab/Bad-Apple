@@ -29,11 +29,11 @@ public:
     Encoder_RT(
         std::string video,
         std::string font,
-        int _x,
-        int _y,
+        std::string scale,
         int fps,
         int _contrast,
-        int debug) {
+        char *name,
+        int _debug = 0) : Encoder(_debug) {
         contrast = _contrast;
 
         fnt = new Font(font);
@@ -65,17 +65,20 @@ public:
         const int max_z = get_console_size();
         const int max_x = max_z & 65535, max_y = ((max_z >> 16) - 1) << 1;
 
-        if (_x) {
-            x = _x;
-            if (_y) {
-                y = _y;
+        sscanf(scale.c_str(), "%d:%d", &x, &y);
+
+        if (x) {
+            if (y) {
+                // x = x;
+                // y = y;
             } else {
-                y = (_h * _x + (_w >> 1)) / _w;
+                // x = x;
+                y = (_h * x + (_w >> 1)) / _w;
             }
         } else {
-            if (_y) {
-                x = (_w * _y + (_h >> 1)) / _h;
-                y = _y;
+            if (y) {
+                x = (_w * y + (_h >> 1)) / _h;
+                // y = y;
             } else {
                 const int max_yx = (_w * max_y + (_h >> 1)) / _h;
                 x = std::min(max_x, max_yx);
@@ -94,8 +97,8 @@ public:
 
         xy = x * y;
 
-        printf("[%d:%d %.2lfHz] -> [%d:%d %.2lfHz] %.3lfs/%dms %s\n",
-               _w, _h, _r,
+        printf("[%d:%d %.2lfHz] -%s-> [%d:%d %.2lfHz] %.3lfs/%dms %s\n",
+               _w, _h, _r, name,
                x, y, _r / mo,
                vp->duration, clk / 1000,
                debug ? "[debug]" : "");

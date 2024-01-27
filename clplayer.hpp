@@ -25,17 +25,17 @@ inline Cmd* get_player(
         return new Nothing();
     }
 
-    if (player == "ffmpeg" || player == "ffplay") {
-        return FFplayPlayer(audio);
+    if (player == "auto" || player == "ffmpeg" || player == "ffplay") {
+        return new FFplayPlayer(audio);
     }
     if (player == "mpv") {
-        return MpvPlayer(audio);
+        return new MpvPlayer(audio);
     }
     if (player == "mpg123" || player == "mpg") {
-        return Mpg123Player(audio);
+        return new Mpg123Player(audio);
     }
     if (player == "cmus" || player == "cmus-remote") {
-        return CmusPlayer(audio);
+        return new CmusPlayer(audio);
     }
     throws("Bad Player!!: " + player);
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <cstring>
 #include <chrono>
 
 #if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
@@ -10,9 +9,15 @@
 #include <unistd.h>
 #endif
 
+#ifndef LL
 #define LL long long
+#endif
 
-const int BUF_SIZE = 1 << 8;
+#ifndef BUF_SIZE
+#define BUF_SIZE (1 << 8)
+#endif
+
+namespace clplayer {
 
 inline int exec_r(const char *cmd, char *res, int res_size = BUF_SIZE) {
 #if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
@@ -40,6 +45,7 @@ inline int exec_r(const char *cmd, char *res, int res_size = BUF_SIZE) {
     res[t] = 0;
     return t;
 }
+}  // namespace clplayer
 
 class Cmd {
 private:
@@ -59,7 +65,7 @@ private:
 public:
     char cmd[BUF_SIZE], name[BUF_SIZE] = "";
 
-    Cmd(std::string _cmd) { memcpy(cmd, _cmd.c_str(), _cmd.length()); }
+    Cmd(std::string _cmd) { sprintf(cmd, _cmd.c_str()); }
 
     virtual inline int start() {
         // printf("%s\n", cmd);
@@ -95,7 +101,7 @@ public:
         int code(GetExitCodeProcess(p.hProcess, &lpExitCode));
         return lpExitCode == STILL_ACTIVE;
 #else
-        return exec_r(p, result);
+        return clplayer::exec_r(p, result);
 #endif
     }
 
@@ -109,7 +115,7 @@ public:
         CloseHandle(p.hProcess);
         CloseHandle(p.hThread);
 #else
-        int t(exec_r(p, result));
+        int t(clplayer::exec_r(p, result));
         if (result[t - 1] == 10) {
             result[t - 1] = 0;
         }
@@ -192,25 +198,13 @@ public:
 
 class Nothing : public Cmd {
 public:
-    Nothing(std::string cmd = "") : Cmd(cmd) {
-        sprintf(cmd, "");
+    Nothing(std::string _cmd = "nothing") : Cmd(cmd) {
+        sprintf(name, _cmd.c_str());
     }
-
-    inline int start() {}
-
-    inline int run() {}
-
-    inline int is_alive() {
-        return 0;
-    }
-
-    inline int kill() {
-        return 0;
-    }
-
+    inline int start() { return 0; }
+    inline int run() { return 0; }
+    inline int is_alive() { return 0; }
+    inline int kill() { return 0; }
     inline void join() {}
-
-    inline double wait() {
-        return 0.;
-    }
+    inline double wait() { return 0.; }
 };

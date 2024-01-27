@@ -29,21 +29,18 @@ int main(int argc, char** argv) {
     a.add<std::string>("output", 'o', "[preload] output file", false, "");
     a.add<std::string>("font", 'f', "font data file", false, "");
     a.add<std::string>("audio", 'a', "audio file", false, "");
+    a.add<std::string>("player", 'p', "player [ffmpeg mpv mpg123 cmus]", false, "");
     a.add<std::string>("scale", 's', "width:height (0 means auto)", false, "0:0");
     a.add<double>("rate", 'r', "frame rate", false, 1024.0);
     a.add("not_clear", '\0', "not clear screen (with ANSI) before each frame");
     a.add("contrast", '\0', "contrast enhancement");
     a.add("preload", '\0', "preload video (not play)");
-    a.add("play_audio", '\0', "play audio with ffplay");
     a.add("debug", '\0', "[debug]");
     a.parse_check(argc, argv);
 
-    int x, y;
-    sscanf(a.get<std::string>("scale").c_str(), "%d:%d", &x, &y);
     play(a.get<std::string>("input"), a.get<std::string>("output"),
-         a.get<std::string>("font"), a.get<std::string>("audio"),
-         x, y, a.get<double>("rate"),
+         a.get<std::string>("audio"), a.get<std::string>("player"),
+         a.get<std::string>("font"), a.get<std::string>("scale"), a.get<double>("rate"),
          a.exist("not_clear"), a.exist("contrast"), a.exist("preload"),
-         a.exist("play_audio"),
          a.exist("debug"));
 }

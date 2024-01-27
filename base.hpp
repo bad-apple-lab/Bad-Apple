@@ -3,6 +3,7 @@
 #include "winux.hpp"
 #include "util.hpp"
 #include "font.hpp"
+#include "clplayer.hpp"
 
 inline void playa(std::string audio) {
     std::string cmd = "ffplay -v quiet -nodisp -autoexit -hide_banner \"" + audio + "\"";
@@ -63,7 +64,7 @@ public:
     std::string video;
     int x, y, xy;
 
-    Decoder(std::string _video) { video = _video; }
+    Decoder(std::string _video) : video(_video) {}
     virtual inline VideoProperties *analysis() { return nullptr; }
     virtual inline int ready_to_read(int _x, int _y) {
         x = _x;
@@ -77,9 +78,11 @@ public:
 
 class Encoder {
 public:
+    int debug;
     int x, y, mo = 1, print_size;
     LL clk;
     char *buffer;
+    Encoder(int _debug = 0) : debug(_debug) {}
     virtual inline int read_a_frame() { return 1; }
     virtual inline void refresh_buffer() {}
     virtual inline void cls() {}
@@ -87,6 +90,8 @@ public:
 
 class Outer {
 public:
+    int debug;
+    Outer(int _debug = 0) : debug(_debug) {}
     virtual inline void print_a_frame(char *, int) {}
-    virtual inline void close() {}
+    virtual inline void cls() {}
 };

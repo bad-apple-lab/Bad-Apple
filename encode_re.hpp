@@ -25,16 +25,16 @@ private:
     int contrast;
 
 public:
-    Encoder_Re(std::string video, int debug) {
+    Encoder_Re(std::string video, char* name, int _debug = 0) : Encoder(_debug) {
         fp = fopen(video.c_str(), "r");
 
         x = r();
         y = r();
         clk = r();
 
-        printf("[%d:%d %.2lfHz] -> [replay] %s\n",
+        printf("[%d:%d %.2lfHz] -%s-> [replay] %s\n",
                x, y, CLOCKS_PER_SEC / (double)clk,
-               debug ? "[debug]" : "");
+               name, debug ? "[debug]" : "");
 
         print_size = (x + 1) * y;
         buffer = (char *)malloc(print_size + 2);
