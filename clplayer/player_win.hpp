@@ -41,8 +41,7 @@ public:
     }
 
     virtual int inline run() {
-        start();
-        wait();
+        system(cmd.c_str());
     }
 
     virtual int inline is_alive() {
@@ -85,6 +84,10 @@ public:
         }
         terminate();
         return now(t) / 1000000.0;
+    }
+
+    virtual double inline join() {
+        return wait();
     }
 };
 

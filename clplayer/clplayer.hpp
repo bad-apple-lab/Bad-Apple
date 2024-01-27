@@ -1,34 +1,43 @@
 #pragma once
 
-#include <cstdio>
-#include <cstdlib>
 #include <iostream>
 #include <cstring>
 #include <chrono>
 
-#include "../winux.hpp"
+#if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 
 #define LL long long
 
-const int BUFFER_SIZE = 1 << 8;
+const int BUF_SIZE = 1 << 8;
 
-inline int exec_r(const char *cmd, char *result) {
-    FILE *p = r_popen(cmd);
+inline int exec_r(const char *cmd, char *res, int res_size = BUF_SIZE) {
+#if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
+    FILE *p(_popen(cmd, "r"));
+#else
+    FILE *p(popen(cmd, "r"));
+#endif
     if (!p) return -1;
 
-    int t = 0;
-    const int result_size = sizeof(result);
+    int t(0);
     while (!feof(p)) {
-        if (t + BUFFER_SIZE < result_size) {
-            t += fread(result + t, 1, BUFFER_SIZE, p);
+        if (t + BUF_SIZE < res_size) {
+            t += fread(res + t, 1, BUF_SIZE, p);
         } else {
-            t += fread(result + t, 1, result_size - t - 1, p);
+            t += fread(res + t, 1, res_size - t - 1, p);
             break;
         }
     }
 
-    pipe_pclose(p);
-    result[t] = 0;
+#if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
+    _pclose(p);
+#else
+    pclose(p);
+#endif
+    res[t] = 0;
     return t;
 }
 
@@ -37,14 +46,9 @@ private:
 #if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
     PROCESS_INFORMATION p;
 #else
-    char p[BUFFER_SIZE];
-    char result[BUFFER_SIZE];
+    char p[BUF_SIZE];
+    char result[BUF_SIZE];
 #endif
-    LL clk;  // microseconds
-
-    inline LL micros(double s) {
-        return s * 1000000.0 + 0.5;
-    }
 
     inline LL now(std::chrono::steady_clock::time_point t) {
         return std::chrono::duration_cast<std::chrono::microseconds>(
@@ -53,17 +57,17 @@ private:
     }
 
 public:
-    char cmd[BUFFER_SIZE], name[BUFFER_SIZE] = "";
+    char cmd[BUF_SIZE], name[BUF_SIZE] = "";
 
     Cmd(std::string _cmd) { memcpy(cmd, _cmd.c_str(), _cmd.length()); }
 
     virtual inline int start() {
         // printf("%s\n", cmd);
 #if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
-        LPWSTR w;
+        
         WCHAR _wt[265];
         mbstowcs(_wt, cmd, cmd.length() + 1);
-        w = _wt;
+        LPWSTR w(_wt);
         STARTUPINFOW s;
         ZeroMemory(&s, sizeof(s));
         s.cb = sizeof(s);
@@ -72,7 +76,7 @@ public:
             return GetLastError();
         }
 #else
-        pid_t pid = fork();
+        pid_t pid(fork());
         if (!pid) {
             system(cmd);
             exit(0);
@@ -88,8 +92,8 @@ public:
 
     virtual inline int is_alive() {
 #if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
-        DWORD lpExitCode = 0;
-        int code = GetExitCodeProcess(p.hProcess, &lpExitCode);
+        DWORD lpExitCode(0);
+        int code(GetExitCodeProcess(p.hProcess, &lpExitCode));
         return lpExitCode == STILL_ACTIVE;
 #else
         return exec_r(p, result);
@@ -110,8 +114,8 @@ public:
         if (result[t - 1] == 10) {
             result[t - 1] = 0;
         }
-        char ccc[BUFFER_SIZE];
-        sprintf(ccc, "kill %s >/dev/null 2&>1", result);
+        char ccc[BUF_SIZE];
+        sprintf(ccc, "kill %s >/dev/null 2>&1", result);
         system(ccc);
 #endif
         return 0;
@@ -127,11 +131,11 @@ public:
     }
 
     virtual inline double wait(double s = -1.) {
-        std::chrono::steady_clock::time_point t = std::chrono::steady_clock::now();
+        std::chrono::steady_clock::time_point t(std::chrono::steady_clock::now());
         if (s < 0.) {
             join();
         } else {
-            LL mms = micros(s);
+            LL mms(s * 1000000.0 + 0.5);
             while (now(t) < mms && is_alive())
                 ;
         }
@@ -168,7 +172,7 @@ class CmusPlayer : public Cmd {
 public:
     CmusPlayer(std::string audio) : Cmd(audio) {
         sprintf(name, "cmus");
-        sprintf(cmd, "cmus-remote -f \"%s\" >/dev/null 2&>1", audio.c_str());
+        sprintf(cmd, "cmus-remote -f \"%s\" >/dev/null 2>&1", audio.c_str());
     }
 
     inline int start() {
