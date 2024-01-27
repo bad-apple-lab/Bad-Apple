@@ -28,38 +28,38 @@ inline int play(
         output = video + ".badapple";
     }
 
-    Encoder *encoder;
+    Encoder *enc;
     if (endswith(video, ".badapple")) {
         if (preload) {
             throws("Video file is already preloaded.");
             return 1;
         }
-        encoder = new Encoder_Re(video, debug);
+        enc = new Encoder_Re(video, debug);
     } else {
-        encoder = new Encoder_RT(video, font, x, y, fps, contrast, debug);
+        enc = new Encoder_RT(video, font, x, y, fps, contrast, debug);
     }
 
     Outer *outer;
     if (preload) {
-        outer = new Preloader(output, encoder->x, encoder->y, encoder->clk, debug);
+        outer = new Preloader(output, enc->x, enc->y, enc->clk, debug);
     } else {
-        outer = new Printer(video, audio, encoder->clk, not_clear, play_audio, debug);
+        outer = new Printer(video, audio, enc->clk, not_clear, play_audio, debug);
     }
 
     for (auto i = 0;; i++) {
-        if (encoder->read_a_frame()) {
+        if (enc->read_a_frame()) {
             if (!i) {
                 throws("The first frame is empty.");
                 return 1;
             }
             break;
         }
-        if (i % encoder->mo) continue;
-        encoder->refresh_buffer();
-        outer->print_a_frame(encoder->buffer, encoder->print_size);
+        if (i % enc->mo) continue;
+        enc->refresh_buffer();
+        outer->print_a_frame(enc->buffer, enc->print_size);
     }
 
-    encoder->cls();
+    enc->cls();
     outer->close();
     return 0;
 }
