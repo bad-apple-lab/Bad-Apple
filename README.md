@@ -22,18 +22,18 @@ Automatically enter preload-replay mode when the input file extension is `.badap
 usage: badapple [options] ... 
   (BadApple-Decoder-OS-ISA-Version)
 options:
-  -i, --input         video file (string [=./badapple.mp4])
-  -o, --output        [preload] output file (string [=])
-  -f, --font          font data file (string [=])
-  -a, --audio         audio file (string [=])
-  -s, --scale         width:height (0 means auto) (string [=0:0])
-  -r, --rate          frame rate (double [=1024])
-      --not_clear     not clear screen (with ANSI) before each frame
-      --contrast      contrast enhancement
-      --preload       preload video (not play)
-      --play_audio    play audio with ffplay
-      --debug         [debug]
-  -?, --help          print this message
+  -i, --input        video file (string [=./badapple.mp4])
+  -o, --output       [preload] output file (string [=])
+  -f, --font         font data file (string [=])
+  -a, --audio        audio file (string [=])
+  -p, --player       player [ffmpeg mpv mpg123 cmus] (string [=])
+  -s, --scale        width:height (0 means auto) (string [=0:0])
+  -r, --rate         frame rate (double [=1024])
+      --not_clear    not clear screen (with ANSI) before each frame
+      --contrast     contrast enhancement
+      --preload      preload video (not play)
+      --debug        [debug]
+  -?, --help         print this message
 ```
 
 ### Clone
