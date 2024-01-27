@@ -4,29 +4,7 @@
 
 class Decoder_FFmpeg : public Decoder {
 private:
-    const int BUFFER_SIZE = 1 << 8;
     const int STDOUT_SIZE = 1 << 20;
-
-    inline int exec_r(const char *cmd, char *result) {
-        FILE *p = r_popen(cmd);
-
-        if (!p) return 1;
-        int code = 0;
-
-        int t = 0;
-        while (!feof(p)) {
-            fread(result + t, 1, BUFFER_SIZE, p);
-            t += BUFFER_SIZE;
-            if (t >= STDOUT_SIZE) {
-                code = 2;
-                break;
-            }
-        }
-        pipe_pclose(p);
-
-        return code;
-    }
-
     FILE *fp;
 
 public:
@@ -41,7 +19,8 @@ public:
 
         double rate_l, rate_r;  // fps = rate_l / rate_r;
         char result_c[STDOUT_SIZE];
-        if (exec_r(cmd.c_str(), result_c)) {
+        int t = exec_r(cmd.c_str(), result_c, STDOUT_SIZE);
+        if (t <= 0) {
             throws("Failed to analysis video.");
             return nullptr;
         }

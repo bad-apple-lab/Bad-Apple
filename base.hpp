@@ -1,33 +1,13 @@
 #pragma once
 
-#include <iostream>
-#include <cstring>
-#include <ctime>
 #include <chrono>
 
 #include "winux.hpp"
+#include "util.hpp"
 #include "font.hpp"
 
 #define LL long long
 #define B unsigned char
-
-inline int endswith(std::string s, std::string sub) {
-    return s.rfind(sub) < s.length() && s.rfind(sub) == (s.length() - sub.length());
-}
-
-inline void throws(std::string s) {
-    throw std::runtime_error(s);
-}
-
-inline int not_exist(std::string s) {
-    FILE *fp;
-    fp = fopen(s.c_str(), "rb");
-    if (!fp) {
-        return 1;
-    }
-    fclose(fp);
-    return 0;
-}
 
 inline void playa(std::string audio) {
     std::string cmd = "ffplay -v quiet -nodisp -autoexit -hide_banner \"" + audio + "\"";
@@ -84,10 +64,10 @@ private:
 public:
     LL clk;
     Timer(LL c) : clk(c) {}
-    void bg() {
+    inline void bg() {
         t0 = std::chrono::steady_clock::now();
     }
-    int wait() {
+    inline int wait() {
         auto t1 = std::chrono::steady_clock::now();
         while ((LL)std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() < clk) {
             t1 = std::chrono::steady_clock::now();
@@ -95,7 +75,7 @@ public:
         t0 = t1;
         return 0;
     }
-    void slp(int s) {
+    inline void slp(int s) {
         second_sleep(s);
     }
 };
@@ -112,7 +92,7 @@ public:
     int x, y, xy;
 
     Decoder(std::string _video) { video = _video; }
-    virtual VideoProperties *analysis() { return nullptr; }
+    virtual inline VideoProperties *analysis() { return nullptr; }
     virtual inline int ready_to_read(int _x, int _y) {
         x = _x;
         y = _y;

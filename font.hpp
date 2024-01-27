@@ -1,5 +1,8 @@
 #pragma once
 
+#include <iostream>
+#include <cstring>
+
 #include "font/consola_ascii_0_ff.h"
 
 const int MAXCOL = 0x100;
@@ -42,5 +45,5 @@ public:
     Font() { init(); }
     Font(const char *s) { init(s); }
     Font(std::string s) { init(s.c_str()); }
-    char get(int x, int y) { return o[x][y]; }
+    inline char get(int x, int y) { return o[x][y]; }
 };
