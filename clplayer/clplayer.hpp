@@ -71,7 +71,7 @@ public:
         // printf("%s\n", cmd);
 #if defined(__WINDOWS_) || defined(_WIN32) || defined(_WIN64)
         WCHAR _wt[265];
-        mbstowcs(_wt, cmd, cmd.length() + 1);
+        mbstowcs(_wt, cmd, strlen(cmd) + 1);
         LPWSTR w(_wt);
         STARTUPINFOW s;
         ZeroMemory(&s, sizeof(s));
