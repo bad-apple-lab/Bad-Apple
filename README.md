@@ -161,6 +161,4 @@ python -u "font/font.py"
 
 ### To Do
 
-Use `make` to compile.
-
-Choose audio player.
+C++ Python module
