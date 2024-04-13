@@ -52,7 +52,7 @@ git submodule update --init
 
 ### How to build
 
-*Only tested on x86_64
+*Tested on x86_64 & aarch64
 
 #### Windows-FFmpeg
 
